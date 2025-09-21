@@ -1,0 +1,22 @@
+# application-docker.yml
+
+server:
+  port: 0  # Spring Boot picks a random port
+
+spring:
+  application:
+    name: order-service
+
+# Eureka Discovery (Docker)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

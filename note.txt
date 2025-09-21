@@ -1,0 +1,95 @@
+1️⃣ Config Server
+
+Purpose: Holds centralized configuration for all services.
+
+Dependencies:
+1. Spring Web
+2. Config Server
+
+
+2️⃣ Discovery Server (Eureka)
+
+Purpose: Service registry for microservices.
+
+Dependencies:
+1. Spring Web
+2. Eureka Server
+
+
+
+
+
+3️⃣ API Gateway
+
+Purpose: Routes requests to services and handles JWT validation.
+
+Dependencies:
+1.Spring Web
+2.Spring Cloud Gateway
+3.Eureka Discovery Client
+
+
+
+
+
+4️⃣ Auth Service
+
+Purpose: Authentication, JWT generation, Redis-based session/blacklist.
+
+Dependencies:
+1. Spring Web
+2. Spring Security
+3. Spring Data Redis
+4. Eureka Discovery Client
+5. Spring Data JPA
+6. Lombok
+
+
+
+
+5️⃣ User Service
+
+Purpose: Handles user data.
+
+Dependencies:
+1. Spring Web
+2. Eureka Discovery Client
+3. Spring Data JPA
+4. Lombok
+5. MYSQL Driver
+
+
+
+
+6️⃣ Order Service
+
+Purpose: Handles orders, calls User Service for user info.
+
+Dependencies:
+1. Spring Web
+2. Eureka Discovery Client
+3. Spring Data JPA
+4. Lombok
+5. MYSQL Driver
+
+
+
+
+1. DISCOVER
+http://localhost:8761/
+
+
+
+
+
+
+
+microservices-config/
+├── application.yml                 # common/shared config
+├── user-service-dev.yml
+├── user-service-prod.yml
+├── order-service-dev.yml
+├── order-service-prod.yml
+├── api-gateway-dev.yml
+├── api-gateway-prod.yml
+└── auth-service-dev.yml

@@ -1,0 +1,15 @@
+# Ignore build outputs
+**/target
+
+# IDE / VCS
+**/.git
+**/.gitignore
+**/.idea
+**/.vscode
+*.iml
+
+# OS
+**/.DS_Store
+
+# Logs
+**/*.log
