@@ -1,31 +1,27 @@
 # Dockerfile discovery-service
 
-# -------- Build stage --------
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
-WORKDIR /app
 
-# Copy only pom.xml to leverage Docker cache
+
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+WORKDIR /workspace
+
+# Copy project files and build the application
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copy source code
 COPY src ./src
 
-# Build the jar
-RUN mvn clean package -DskipTests -B
+# Build the JAR (skip tests for faster builds). Uses a cached Maven repo for speed.
+RUN --mount=type=cache,target=/root/.m2 mvn -B -DskipTests package
 
-# -------- Runtime stage --------
-FROM eclipse-temurin:21-jre-alpine
+# Runtime image with JRE 21 (smaller than full JDK)
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Copy the built jar from build stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy the built JAR from the builder stage
+COPY --from=builder /workspace/target/*.jar app.jar
 
-# Use docker profile if needed
-ENV SPRING_PROFILES_ACTIVE=docker
+# Expose application port
+EXPOSE 8080
 
-# Expose Eureka port
-EXPOSE 8761
+# Run the Spring Boot app
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]

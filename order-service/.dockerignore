@@ -1,0 +1,28 @@
+.git
+.gitignore
+**/.idea/
+**/.vscode/
+**/.project
+**/.settings/
+**/.classpath
+**/.DS_Store
+
+# Maven
+**/target/
+.mvn/
+!mvnw
+!mvnw.cmd
+
+# Node/Frontend leftovers
+**/node_modules/
+**/dist/
+**/build/
+
+# Logs and temp
+**/*.log
+**/tmp/
+**/temp/
+**/.env
+
+# Docker
+Dockerfile*

@@ -1,6 +1,6 @@
 #application-docker.yml
 server:
-  port: 8080
+  port: 8761
 
 spring:
   application:

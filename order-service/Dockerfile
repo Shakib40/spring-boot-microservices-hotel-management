@@ -1,26 +1,25 @@
 #Dockerfile order-service
 
-# syntax=docker/dockerfile:1
+# Use Eclipse Temurin JDK 21
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+WORKDIR /workspace
 
-# -------- Build stage --------
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /app
-
+# Copy project files and build the application
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
 COPY src ./src
-RUN mvn package -DskipTests -B
 
-# -------- Runtime stage --------
-FROM eclipse-temurin:17-jre
+# Build the JAR (skip tests for faster builds). Uses a cached Maven repo for speed.
+RUN --mount=type=cache,target=/root/.m2 mvn -B -DskipTests package
+
+# Runtime image with JRE 21 (smaller than full JDK)
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+# Copy the built JAR from the builder stage
+COPY --from=builder /workspace/target/*.jar app.jar
 
-# Use docker profile
-ENV SPRING_PROFILES_ACTIVE=docker
-
+# Expose application port
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
 
+# Run the Spring Boot app
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
