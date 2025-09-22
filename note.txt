@@ -75,18 +75,6 @@ Dependencies:
 
 
 
-1. DISCOVER
-http://localhost:8761/
-
-
-2. ORDER-SERVICE
-http://localhost:8083/
-
-
-
-
-
-
 microservices-config/
 ├── application.yml                 # common/shared config
 ├── user-service-dev.yml
@@ -96,3 +84,13 @@ microservices-config/
 ├── api-gateway-dev.yml
 ├── api-gateway-prod.yml
 └── auth-service-dev.yml
+
+
+
+
+1. DISCOVER
+http://localhost:8761/
+
+
+2. ORDER-SERVICE
+http://localhost:8083/
