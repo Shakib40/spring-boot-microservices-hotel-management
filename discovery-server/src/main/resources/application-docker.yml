@@ -7,9 +7,13 @@ spring:
     name: discovery-server
 
 eureka:
+  instance:
+    hostname: discovery-server
   client:
     register-with-eureka: false
     fetch-registry: false
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
   server:
     enable-self-preservation: false
 

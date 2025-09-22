@@ -5,7 +5,7 @@ services:
     build: ./config-server
     container_name: config-server
     ports:
-      - "8888:8080"   
+      - "8888:8888"   
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
@@ -15,7 +15,7 @@ services:
     build: ./discovery-server
     container_name: discovery-server
     ports:
-      - "8761:8080"   
+      - "8761:8761"   
     depends_on:
       - config-server
     environment:
@@ -52,17 +52,17 @@ services:
 #      - spring-net
 
   order-service:
-    build: ./order-service
-    container_name: order-service
-    ports:
-      - "8083:8080"
-    depends_on:
-      - config-server
-      - discovery-server
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - spring-net
+   build: ./order-service
+   container_name: order-service
+   ports:
+     - "8083:8083"
+   depends_on:
+     - config-server
+     - discovery-server
+   environment:
+     - SPRING_PROFILES_ACTIVE=docker
+   networks:
+     - spring-net
 
 #  mysql:
 #    image: mysql:8.0

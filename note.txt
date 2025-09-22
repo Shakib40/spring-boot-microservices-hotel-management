@@ -79,6 +79,9 @@ Dependencies:
 http://localhost:8761/
 
 
+2. ORDER-SERVICE
+http://localhost:8083/
+
 
 
 
