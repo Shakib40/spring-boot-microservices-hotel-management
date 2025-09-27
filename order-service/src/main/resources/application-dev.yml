@@ -1,5 +1,5 @@
 server:
-  port: 8083   
+  port: 8083
 
 spring:
   application:
@@ -7,11 +7,11 @@ spring:
   config:
     import: "optional:configserver:http://config-server:8888"
 
-# Eureka Discovery (Docker)
+# Eureka Discovery (Dev/Docker)
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: ${EUREKA_SERVER_URL:http://discovery-server:8761/eureka/}
   instance:
     prefer-ip-address: true
 

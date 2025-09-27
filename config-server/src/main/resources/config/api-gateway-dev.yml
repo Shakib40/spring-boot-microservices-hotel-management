@@ -5,6 +5,7 @@ spring:
   application:
     name: api-gateway
 
+# Dev profile settings for API Gateway
 eureka:
   client:
     service-url:
