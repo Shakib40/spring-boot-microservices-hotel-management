@@ -1,10 +1,10 @@
-#application-docker.yml
+# Production profile for Discovery Service
 server:
   port: 8761
 
 spring:
   application:
-    name: discovery-server
+    name: discovery-service
 
 eureka:
   instance:
@@ -22,3 +22,8 @@ management:
     web:
       exposure:
         include: "*"
+
+logging:
+  level:
+    com.netflix.eureka: INFO
+    com.netflix.discovery: INFO

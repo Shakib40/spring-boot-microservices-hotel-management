@@ -1,0 +1,16 @@
+server:
+  port: 8083
+  
+spring:
+  application:
+    name: order-service
+
+management:
+  tracing:
+    sampling:
+      # Lower sampling in production to reduce overhead
+      probability: 0.1
+  zipkin:
+    tracing:
+      # Zipkin server URL for production (e.g., service discovery or DNS)
+      endpoint: http://zipkin:9411/api/v2/spans

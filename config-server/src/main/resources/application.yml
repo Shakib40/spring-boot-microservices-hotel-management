@@ -1,0 +1,41 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        native:  
+          search-locations: classpath:/config
+ 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  cloud:
+    config:
+      server:
+        native:
+          # Local dev configuration files
+          search-locations: classpath:/config
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    config:
+      server:
+        native:
+          # Production configuration files
+          search-locations: classpath:/config

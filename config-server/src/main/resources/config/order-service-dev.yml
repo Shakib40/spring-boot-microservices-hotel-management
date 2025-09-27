@@ -1,0 +1,16 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: order-service
+
+management:
+  tracing:
+    sampling:
+      # 100% sampling for local development
+      probability: 1.0
+  zipkin:
+    tracing:
+      # Zipkin server URL for dev
+      endpoint: http://localhost:9411/api/v2/spans
