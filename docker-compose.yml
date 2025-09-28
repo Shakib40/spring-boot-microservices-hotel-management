@@ -49,12 +49,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - config-server
       - order-service
       - discovery-server
     networks:
       - spring-net
     profiles:
       - prod
+      - dev
     restart: unless-stopped
 
 networks:

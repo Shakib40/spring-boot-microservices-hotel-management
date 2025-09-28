@@ -72,25 +72,4 @@ Dependencies:
 4. Lombok
 5. MYSQL Driver
 
-
-
-
-microservices-config/
-├── application.yml                 # common/shared config
-├── user-service-dev.yml
-├── user-service-prod.yml
-├── order-service-dev.yml
-├── order-service-prod.yml
-├── api-gateway-dev.yml
-├── api-gateway-prod.yml
-└── auth-service-dev.yml
-
-
-
-
-1. DISCOVER
-http://localhost:8761/
-
-
-2. ORDER-SERVICE
-http://localhost:8083/api/order/orders
+ 

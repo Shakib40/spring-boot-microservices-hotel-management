@@ -1,0 +1,6 @@
+1. DISCOVER
+http://localhost:8761/
+
+
+2. ORDER-SERVICE
+http://localhost:8083/api/order/orders

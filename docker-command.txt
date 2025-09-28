@@ -1,0 +1,4 @@
+
+
+docker compose --profile dev up -d --build
+docker compose --profile prod up -d --build
