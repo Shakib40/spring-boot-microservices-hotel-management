@@ -1,91 +1,47 @@
 server:
-   port: 8888
+  port: 8888
 
 spring:
-   application:
-     name: config-server
-   cloud:
-     config:
-       server:
-         native:
-           search-locations: classpath:/config
- 
+  profiles:
+    active: native
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        composite:
+          - type: native
+            search-locations: classpath:/config
+
 management:
-   endpoints:
-     web:
-       exposure:
-         include: "*"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 ---
 spring:
-   config:
-     activate:
-       on-profile: dev
-   cloud:
-     config:
-       server:
-         native:
-           search-locations: classpath:/config
+  config:
+    activate:
+      on-profile: dev
+  cloud:
+    config:
+      server:
+        composite:
+          - type: native
+            search-locations: classpath:/config
 
 ---
 spring:
-   config:
-     activate:
-       on-profile: prod
-   cloud:
-     config:
-       server:
-         native:
-          search-locations: classpath:/config
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    config:
+      server:
+        composite:
+          - type: native
+            search-locations: classpath:/config
 
-#
-#server:
-#  port: 8888
-#
-#spring:
-#  application:
-#    name: config-server
-#
-#  cloud:
-#    config:
-#      server:
-#        git:
-#          uri: https://github.com/shakibjilani/config-server-hotel-management
-#          clone-on-start: true
-#          default-label: main
-#
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: "*"
-#
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: dev
-#  cloud:
-#    config:
-#      server:
-#        git:
-#          uri: https://github.com/shakibjilani/config-server-hotel-management-dev
-#          clone-on-start: true
-#          default-label: main
-#        native:
-#           search-locations: classpath:/config
-#
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: prod
-#  cloud:
-#    config:
-#      server:
-#        git:
-#          uri: https://github.com/shakibjilani/config-server-hotel-management-prod
-#          clone-on-start: true
-#          default-label: main
-#        native:
-#           search-locations: classpath:/config
+
+
