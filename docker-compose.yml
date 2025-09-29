@@ -11,7 +11,7 @@ services:
     profiles:
       - dev
       - prod
-    restart: unless-stopped
+    # restart: unless-stopped
 
   discovery-server:
     build: ./discovery-server
@@ -25,7 +25,7 @@ services:
     profiles:
       - dev
       - prod
-    restart: unless-stopped
+    # restart: unless-stopped
 
   order-service:
     build: ./order-service
@@ -40,8 +40,7 @@ services:
     profiles:
       - dev
       - prod
-    restart: unless-stopped
-
+    # restart: unless-stopped
 
   api-gateway:
     build: ./api-gateway
@@ -57,9 +56,8 @@ services:
     profiles:
       - prod
       - dev
-    restart: unless-stopped
+    # restart: unless-stopped
 
 networks:
   spring-net:
     driver: bridge
- 

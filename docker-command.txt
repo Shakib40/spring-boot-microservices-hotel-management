@@ -2,3 +2,8 @@
 
 docker compose --profile dev up -d --build
 docker compose --profile prod up -d --build
+
+
+docker-compose --profile dev logs
+
+docker-compose --profile dev logs config-server

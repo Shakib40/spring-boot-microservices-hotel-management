@@ -1,16 +1,26 @@
 server:
   port: 8083
-  
+
 spring:
   application:
     name: order-service
 
+  cloud:
+    discovery:
+      enabled: true
+    # Optional: If using Config Server, make sure discovery is enabled after config is loaded
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
 management:
   tracing:
     sampling:
-      # Lower sampling in production to reduce overhead
-      probability: 0.1
+      probability: 1.0
   zipkin:
     tracing:
-      # Zipkin server URL for production (e.g., service discovery or DNS)
-      endpoint: http://zipkin:9411/api/v2/spans
+      endpoint: http://localhost:9411/api/v2/spans
