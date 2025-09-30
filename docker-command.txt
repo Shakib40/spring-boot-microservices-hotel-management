@@ -7,3 +7,4 @@ docker compose --profile prod up -d --build
 docker-compose --profile dev logs
 
 docker-compose --profile dev logs config-server
+docker-compose --profile dev logs discovery-server
