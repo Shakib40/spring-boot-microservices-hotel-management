@@ -1,8 +1,12 @@
 
 
+docker compose --profile dev down
+
+
 docker compose --profile dev up -d --build
 docker compose --profile prod up -d --build
 
+docker compose --profile dev build config-server discovery-server
 
 docker-compose --profile dev logs
 

@@ -4,3 +4,43 @@ http://localhost:8761/
 
 2. ORDER-SERVICE
 http://localhost:8083/api/order/orders
+
+
+
+#auth-service
+
+#user-service
+ -user
+ -address
+ -role
+
+
+#order-service
+ -order
+ -order-item
+
+
+#hotel-service
+ -hotel
+ -room
+
+
+#reservation-service
+ -reservation
+
+
+#payment-service
+ -payment
+ -activity-log
+
+
+#notification-service
+ -notification
+
+
+#report-service
+ -report
+
+
+
+
