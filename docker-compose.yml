@@ -1,30 +1,30 @@
 version: "3.9"
 
 services:
-  config-server:
-    build: ./config-server
-    container_name: config-server
-    ports:
-      - "8888:8888"
-    networks:
-      - spring-net
-    profiles:
-      - dev
-      - prod
-    # restart: unless-stopped
+  # config-server:
+  #   build: ./config-server
+  #   container_name: config-server
+  #   ports:
+  #     - "8888:8888"
+  #   networks:
+  #     - spring-net
+  #   profiles:
+  #     - dev
+  #     - prod
+  #   # restart: unless-stopped
 
   discovery-server:
     build: ./discovery-server
     container_name: discovery-server
     ports:
       - "8761:8761"
-    depends_on:
-      - config-server
+    # depends_on:
+    #   - config-server
     networks:
       - spring-net
-    profiles:
-      - dev
-      - prod
+    # profiles:
+    #   - dev
+    #   - prod
     # restart: unless-stopped
 
   # order-service:
