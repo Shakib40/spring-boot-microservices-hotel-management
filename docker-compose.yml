@@ -19,6 +19,17 @@ services:
       - config-server
     networks:
       - spring-net
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - config-server
+      - discovery-server
+    networks:
+      - spring-net
  
 networks:
   spring-net:
