@@ -11,28 +11,3 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.hostname}:${server.port}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://discovery-server:8761/eureka
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-      cors:
-        allowed-origins: "*"
-        allowed-methods: "*"
-
-logging:
-  level:
-    root: INFO
-    org:
-      springframework: INFO
-      springframework.cloud: INFO
-    com:
-      netflix:
-        eureka: INFO
-        discovery: INFO

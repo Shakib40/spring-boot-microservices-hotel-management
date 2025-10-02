@@ -1,54 +1,15 @@
 server:
   port: 8761
-  
 
 spring:
   application:
     name: discovery-server
-  
+
 eureka:
-  instance:
-    hostname: ${spring.application.name}
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     register-with-eureka: false
     fetch-registry: false
-    service-url:
-      defaultZone: http://${spring.application.name}:8761/eureka
   server:
     enable-self-preservation: false
     wait-time-in-ms-when-sync-empty: 0
     response-cache-update-interval-ms: 5000
-    dashboard:
-      enabled: true
-
-
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-      cors:
-        allowed-origins: "*"
-        allowed-methods: "*"
-  endpoint:
-    health:
-      show-details: always
-    info:
-      enabled: true
-  info:
-    env:
-      enabled: true
-
-logging:
-  level:
-    root: INFO
-    org:
-      springframework: INFO
-      springframework.cloud: INFO
-    com:
-      netflix:
-        eureka: INFO
-        discovery: INFO
