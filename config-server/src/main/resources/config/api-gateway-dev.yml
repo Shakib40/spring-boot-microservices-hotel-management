@@ -12,18 +12,18 @@ eureka:
 cloud:
   gateway:
     routes:
-      - id: auth-service
-        uri: lb://auth-service
-        predicates:
-          - Path=/auth/**
-        filters:
-          - StripPrefix=1
-      - id: user-service
-        uri: lb://user-service
-        predicates:
-          - Path=/users/**
-        filters:
-          - StripPrefix=1
+      # - id: auth-service
+      #   uri: lb://auth-service
+      #   predicates:
+      #     - Path=/auth/**
+      #   filters:
+      #     - StripPrefix=1
+      # - id: user-service
+      #   uri: lb://user-service
+      #   predicates:
+      #     - Path=/users/**
+      #   filters:
+      #     - StripPrefix=1
       - id: order-service
         uri: lb://order-service
         predicates:
@@ -31,12 +31,12 @@ cloud:
         filters:
           - StripPrefix=1
           - PrefixPath=/api/orders
-      - id: hotel-service
-        uri: lb://hotel-service
-        predicates:
-          - Path=/hotels/**
-        filters:
-          - StripPrefix=1
+      # - id: hotel-service
+      #   uri: lb://hotel-service
+      #   predicates:
+      #     - Path=/hotels/**
+      #   filters:
+      #     - StripPrefix=1
     discovery:
       locator:
         enabled: true

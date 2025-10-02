@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: discovery-server
+    instance_id: ${spring.cloud.client.hostname}:${server.port}
   
 eureka:
   instance:

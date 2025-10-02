@@ -4,8 +4,8 @@ services:
   config-server:
     build: ./config-server
     container_name: config-server
-    ports:
-      - "8888:8888"
+    # ports:
+    #   - "8888:8888"
     networks:
       - spring-net
  
@@ -24,8 +24,8 @@ services:
   order-service:
     build: ./order-service
     container_name: order-service
-    ports:
-      - "8083:8083"
+    # ports:
+    #   - "8083:8083"
     depends_on:
       config-server:
         condition: service_started
