@@ -5,21 +5,22 @@ server:
 spring:
   application:
     name: discovery-server
-
+  cloud:
+    config:
+      fail-fast: false
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+  instance:
+    hostname: localhost          # or your server IP
+    prefer-ip-address: true
   server:
     enable-self-preservation: false
     wait-time-in-ms-when-sync-empty: 0
     response-cache-update-interval-ms: 5000
 
-# Let the server start even if Config Server is not yet available
-spring:
-  cloud:
-    config:
-      fail-fast: false
+ 
 
  
