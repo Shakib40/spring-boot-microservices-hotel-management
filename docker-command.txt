@@ -24,3 +24,7 @@ docker logs -f discovery-server --tail 200
 
 docker compose --profile dev up -d discovery-server
 docker logs -f discovery-server --tail 200
+
+
+
+docker compose up -d --build

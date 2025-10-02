@@ -1,6 +1,6 @@
 server:
   port: 8081
-
+  
 spring:
   application:
     name: auth-service
@@ -20,18 +20,18 @@ spring:
     host: localhost
     port: 6379
     timeout: 2000ms
-
+  
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-server:8761/eureka
   instance:
     prefer-ip-address: true
-
+  
 jwt:
   secret: mySecretKey12345678901234567890123456789012345678901234567890
   expiration: 86400000 # 24 hours
-
+  
 management:
   endpoints:
     web:
