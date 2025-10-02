@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: order-service
+    instance_id: ${spring.cloud.client.hostname}:${server.port}
+
 
 eureka:
   instance:
