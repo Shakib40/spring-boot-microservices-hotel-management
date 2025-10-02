@@ -12,17 +12,16 @@ spring:
           predicates:
             - Path=/api/orders/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
     
-
 eureka:
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    instance-id: ${spring.application.name}:${spring.cloud.client.hostname}:${server.port}
   client:
     register-with-eureka: true
     fetch-registry: true

@@ -1,27 +1,30 @@
 server:
   port: 8761
   
+
 spring:
   application:
     name: discovery-server
   
 eureka:
   instance:
-    hostname: discovery-server
+    hostname: ${spring.application.name}
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://discovery-server:8761/eureka
+      defaultZone: http://${spring.application.name}:8761/eureka
   server:
     enable-self-preservation: false
     wait-time-in-ms-when-sync-empty: 0
     response-cache-update-interval-ms: 5000
     dashboard:
       enabled: true
-  
+
+
+
 management:
   endpoints:
     web:
