@@ -1,10 +1,10 @@
 server:
   port: 8761
-
+  
 spring:
   application:
     name: discovery-server
-
+  
 eureka:
   instance:
     hostname: discovery-server
@@ -21,9 +21,31 @@ eureka:
     response-cache-update-interval-ms: 5000
     dashboard:
       enabled: true
-
+  
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: INFO
+      springframework.cloud: INFO
+    com:
+      netflix:
+        eureka: INFO
+        discovery: INFO

@@ -8,3 +8,8 @@ spring:
     active: dev
   config:
     import: "optional:configserver:http://config-server:8888"
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
