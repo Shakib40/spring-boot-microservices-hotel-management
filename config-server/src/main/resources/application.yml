@@ -4,39 +4,10 @@ server:
 spring:
   application:
     name: config-server
+  profiles:
+    active: native
   cloud:
     config:
       server:
-        git:
-          uri: https://github.com/Shakib40/spring-boot-microservices-config-hotel-management
-          default-label: main
-          search-paths: config
-          clone-on-start: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  cloud:
-    config:
-      server:
-        git:
-          default-label: dev
-
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-  cloud:
-    config:
-      server:
-        git:
-          default-label: main
+        native:
+          search-locations: classpath:/config

@@ -1,0 +1,38 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /api/orders
+
+spring:
+  application:
+    name: order-service
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: INFO
+      springframework.cloud: INFO
+    com:
+      netflix:
+        eureka: INFO
+        discovery: INFO
