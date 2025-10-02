@@ -33,20 +33,20 @@ services:
         condition: service_started
     networks:
       - spring-net
-    develop:
-      watch:
-        - action: sync
-          path: ./order-service
-          target: /app
-          ignore:
-            - target/
-            - .git/
-            - .idea/
-            - .vscode/
-        - action: rebuild
-          path: ./order-service/pom.xml
-        - action: rebuild
-          path: ./order-service/Dockerfile
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./order-service
+    #       target: /app
+    #       ignore:
+    #         - target/
+    #         - .git/
+    #         - .idea/
+    #         - .vscode/
+    #     - action: rebuild
+    #       path: ./order-service/pom.xml
+    #     - action: rebuild
+    #       path: ./order-service/Dockerfile
  
   api-gateway:
     build: ./api-gateway
