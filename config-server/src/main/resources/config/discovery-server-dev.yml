@@ -1,9 +1,11 @@
+# Config server : discovery-server-dev.yml
 server:
   port: 8761
 
 spring:
   application:
     name: discovery-server
+
 
 eureka:
   client:
@@ -13,5 +15,11 @@ eureka:
     enable-self-preservation: false
     wait-time-in-ms-when-sync-empty: 0
     response-cache-update-interval-ms: 5000
+
+# Let the server start even if Config Server is not yet available
+spring:
+  cloud:
+    config:
+      fail-fast: false
 
  

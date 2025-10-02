@@ -1,9 +1,4 @@
 # Config Server application.yml
-# eureka:
-#   client:
-#     service-url:
-#       defaultZone: http://discovery-server:8761/eureka
-
 
 management:
   endpoints:
