@@ -16,7 +16,8 @@ services:
     ports:
       - "8761:8761"
     depends_on:
-      - config-server
+      config-server:
+        condition: service_started
     networks:
       - spring-net
 
@@ -26,8 +27,25 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - config-server
-      - discovery-server
+      config-server:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+    networks:
+      - spring-net
+ 
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      order-service:
+        condition: service_started
+      config-server:
+        condition: service_started
+      discovery-server:
+        condition: service_started
     networks:
       - spring-net
  

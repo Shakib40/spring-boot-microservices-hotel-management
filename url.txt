@@ -44,3 +44,17 @@ http://localhost:8083/api/order/orders
 
 
 
+http://localhost:8888/order-service/dev
+http://localhost:8888/order-service/prod
+
+
+http://localhost:8888/api-gateway/dev
+http://localhost:8888/api-gateway/prod
+
+
+http://localhost:8888/discovery-server/dev
+http://localhost:8888/discovery-server/prod
+
+
+http://localhost:8888/config-server/dev
+http://localhost:8888/config-server/prod
