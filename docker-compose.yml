@@ -45,7 +45,7 @@ services:
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8083/orders/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health/readiness"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -58,15 +58,15 @@ services:
       - "8080:8080"
     depends_on:
       order-service:
-        condition: service_started
+        condition: service_healthy
       config-server:
-        condition: service_started
+        condition: service_healthy
       discovery-server:
-        condition: service_started
+        condition: service_healthy
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health/readiness"]
       interval: 5s
       timeout: 5s
       retries: 5
