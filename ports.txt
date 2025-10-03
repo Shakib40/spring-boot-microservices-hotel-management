@@ -1,0 +1,19 @@
+
+Config Server : 8080
+Discovery Server : 8761
+
+
+API Gateway : 8080
+
+Auth Service : 8081
+User Service : 8082
+Order Service : 8083
+
+
+
+
+Hotel Service : 8084
+Reservation Service : 8085
+Payment Service : 8086
+Notification Service : 8087
+Report Service : 8088

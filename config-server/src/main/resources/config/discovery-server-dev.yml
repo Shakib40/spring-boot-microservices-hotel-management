@@ -1,4 +1,4 @@
-# Config server : discovery-server-dev.yml
+ 
 server:
   port: 8761
 
