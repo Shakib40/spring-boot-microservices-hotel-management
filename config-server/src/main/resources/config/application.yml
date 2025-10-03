@@ -1,5 +1,4 @@
-# Config Server application.yml
-
+ 
 management:
   endpoints:
     web:

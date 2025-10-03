@@ -1,4 +1,4 @@
-# Config server : order-service-dev.yml
+ 
 server:
   port: 8083
   servlet:
@@ -17,31 +17,4 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.hostname}:${server.port}
-
-# management:
-#   endpoints:
-#     web:
-#       exposure:
-#         include: "*"
-#       cors:
-#         allowed-origins: "*"
-#         allowed-methods: "*"
-#   endpoint:
-#     health:
-#       show-details: always
-#     info:
-#       enabled: true
-#   info:
-#     env:
-#       enabled: true
-
-# logging:
-#   level:
-#     root: INFO
-#     org:
-#       springframework: INFO
-#       springframework.cloud: INFO
-#     com:
-#       netflix:
-#         eureka: INFO
-#         discovery: INFO
+ 
