@@ -12,6 +12,7 @@ public class OrderController {
 
     @GetMapping("/running")
     public String testOrderService() {
+        System.out.println("Order Service is running!");
         return "✅ Order Service is running!";
     }
 
