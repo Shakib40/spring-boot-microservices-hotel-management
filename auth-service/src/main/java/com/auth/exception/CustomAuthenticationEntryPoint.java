@@ -1,7 +1,7 @@
-package com.hotel.exception;
+package com.auth.exception;    
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hotel.dto.ErrorResponse;
+import com.auth.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;

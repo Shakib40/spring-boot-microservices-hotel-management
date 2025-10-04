@@ -1,7 +1,7 @@
-package com.hotel.exception;
+package com.auth.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.hotel.dto.ErrorResponse;
+import com.auth.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

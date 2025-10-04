@@ -4,16 +4,17 @@ import com.auth.dto.LoginRequest;
 import com.auth.dto.RegisterRequest;
 import com.auth.dto.RegisterResponse;
 import com.auth.dto.LoginResponse;
+import com.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor`
+@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthServiceImpl authService;
+    private final AuthService authService;
 
 
     // This will be for Register
