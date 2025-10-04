@@ -53,13 +53,9 @@ public class User {
     private String phoneNumber;
 
     @NotNull(message = "Role is required")
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-
-    public enum Role {
-        SUPER_ADMIN, ADMIN, GUEST, SUPER_ACCOUNTANT, ADMIN_ACCOUNTANT, RECEPTIONIST
-    }
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -1,6 +1,5 @@
 package com.auth.dto;
 
-import com.auth.entity.User;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -35,5 +34,5 @@ public class RegisterRequest {
     private String phoneNumber;
 
     @NotNull(message = "Role is required")
-    private User.Role role;
+    private String role;
 }

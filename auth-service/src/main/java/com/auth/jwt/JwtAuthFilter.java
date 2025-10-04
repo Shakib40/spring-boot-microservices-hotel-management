@@ -41,9 +41,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     // ✅ Extract userId (not username)
                     String userId = jwtUtil.extractUserId(token);
 
-                    System.out.println("HELLLO" + userId);
-
-                    Optional<User> userOpt = userRepository.findById(userId); // TODO
+                     
+                    Optional<User> userOpt = userRepository.findById(userId); 
                      
 
                     if (userOpt.isPresent()) {
@@ -53,7 +52,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 new UsernamePasswordAuthenticationToken(
                                         user,
                                         null,
-                                        List.of(new SimpleGrantedAuthority(user.getRole().name())) // ✅ attach role
+                                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName())) // ✅ attach role entity name
                                 );
 
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

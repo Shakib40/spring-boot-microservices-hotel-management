@@ -5,7 +5,9 @@ import com.auth.dto.RegisterRequest;
 import com.auth.dto.RegisterResponse;
 import com.auth.dto.LoginResponse;
 import com.auth.entity.User;
+import com.auth.entity.Role;
 import com.auth.repository.UserRepository;
+import com.auth.repository.RoleRepository;
 import com.auth.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
@@ -35,6 +38,11 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already exists");
         }
 
+        // Map incoming role name to Role entity
+        String roleName = request.getRole();
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+
         User user = User.builder()
                 .username(request.getUsername())
                 .firstname(request.getFirstname())
@@ -42,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
-                .role(request.getRole())
+                .role(role)
                 .build();
 
         userRepository.save(user);
@@ -87,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Generate new access token
         String newAccessToken = jwtUtil.generateAccessToken(userId);
-        redisService.storeAccessToken(newAccessToken, Long.valueOf(userId));
+        redisService.storeAccessToken(newAccessToken, userId);
 
         return new LoginResponse(userId, "🔄 Token refreshed!", newAccessToken, refreshToken);
     }
