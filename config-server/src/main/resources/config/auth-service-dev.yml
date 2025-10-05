@@ -1,4 +1,4 @@
- 
+
 server:
   port: 8081
   servlet:
@@ -10,7 +10,7 @@ spring:
     name: auth-service
   
   datasource:
-    url: jdbc:mysql://localhost:3306/hotel_management_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://mysql-auth:3306/hotel_management_db_auth?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
     username: root
     password: Shakib@40
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,7 +23,7 @@ spring:
 
   
   redis:
-    host: localhost
+    host: redis-auth
     port: 6379
     password: 
     timeout: 60000
@@ -41,6 +41,3 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.hostname}:${server.port}
- 
-
- 
