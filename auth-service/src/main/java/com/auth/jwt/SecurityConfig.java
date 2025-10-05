@@ -3,6 +3,7 @@ import com.auth.exception.CustomAccessDeniedHandler;
 import com.auth.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,6 +31,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll() // allow all actuator endpoints
                                 .requestMatchers(
                                         "/auth/**",            // login, register
                                         "/swagger-ui/**",

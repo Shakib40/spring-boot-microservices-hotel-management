@@ -10,7 +10,7 @@ spring:
     name: auth-service
   
   datasource:
-    url: jdbc:mysql://mysql-auth:3306/hotel_management_db_auth?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://mysql-auth:3306/hotel_management_db_auth?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
     username: root
     password: Shakib@40
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -22,11 +22,12 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
   
-  redis:
-    host: redis-auth
-    port: 6379
-    password: 
-    timeout: 60000
+  data:
+    redis:
+      host: redis-auth
+      port: 6379
+      password: 
+      timeout: 60s
 
 jwt:
   secret: mySecretKey12345678901234567890123456789012345678901234567890
@@ -41,3 +42,14 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.hostname}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
