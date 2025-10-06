@@ -14,3 +14,10 @@ redis-cli -h redis-dev -p 6379 -a mypassword
 
 exit
 
+
+docker exec -it redis-dev redis-cli   # enter CLI
+PING                                  # should return PONG
+KEYS *                                 # list all keys
+GET myKey                              # get value of a key
+HGETALL myHash                         # check hash
+exit

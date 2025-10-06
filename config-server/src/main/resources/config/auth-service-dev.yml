@@ -13,7 +13,6 @@ spring:
     url: jdbc:mysql://mysql-auth:3306/hotel_management_db_auth?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
     username: root
     password: Shakib@40
-    driver-class-name: com.mysql.cj.jdbc.Driver
   
   jpa:
     hibernate:
