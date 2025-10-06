@@ -7,7 +7,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "Shakib@40"
       MYSQL_DATABASE: hotel_management_db_auth
-    # internal only; no host port published
+    # expose MySQL only to localhost on port 3307 -> container 3306
+    # ports:
+    #   - "127.0.0.1:3307:3306"
     networks:
       - spring-net
     volumes:
