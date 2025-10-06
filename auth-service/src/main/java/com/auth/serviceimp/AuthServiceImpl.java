@@ -55,17 +55,17 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return new RegisterResponse(true, "✅ User registered successfully!");
+        return new RegisterResponse(true, "User registered successfully!");
     }
 
     @Override
     public LoginResponse login(LoginRequest request) {
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("❌ Invalid username or password"));
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("❌ Invalid username or password");
+            throw new RuntimeException("Invalid username or password");
         }
 
         // Generate tokens using userId
@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
 
-        return new LoginResponse( user.getId(), "✅ Login successful!", accessToken, refreshToken);
+        return new LoginResponse( user.getId(), "Login successful!", accessToken, refreshToken);
     }
 
     // ✅ Refresh token logic
@@ -97,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
         String newAccessToken = jwtUtil.generateAccessToken(userId);
         redisService.storeAccessToken(newAccessToken, userId);
 
-        return new LoginResponse(userId, "🔄 Token refreshed!", newAccessToken, refreshToken);
+        return new LoginResponse(userId, "Token refreshed!", newAccessToken, refreshToken);
     }
 
     @Override

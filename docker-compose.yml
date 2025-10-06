@@ -113,11 +113,11 @@ services:
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/auth/actuator/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health/readiness"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   # order-service:
   #   build: ./order-service

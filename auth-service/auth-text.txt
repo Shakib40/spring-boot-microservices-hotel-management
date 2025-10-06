@@ -1,0 +1,24 @@
+{
+    "username" : "Shakib",
+    "firstname": "Shakib",
+    "lastname": "Jilani",
+    "email": "shakib@gmail.com",
+    "password": "Shakib@123",
+    "phoneNumber": "8855227744",
+    "role": "ADMIN"
+}
+
+docker exec -it mysql-auth  mysql -u root -p
+USE hotel_management_db_auth;
+
+mysql> INSERT INTO roles (id, name, description)
+    -> VALUES (UUID(), 'ADMIN', 'Administrator with full access');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> SELECT * FROM roles;
++--------------------------------------+--------------------------------+-------+
+| id                                   | description                    | name  |
++--------------------------------------+--------------------------------+-------+
+| d51da896-a2d4-11f0-bc69-52ff4a2850b6 | Administrator with full access | ADMIN |
++--------------------------------------+--------------------------------+-------+
+ 
