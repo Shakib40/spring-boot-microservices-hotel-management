@@ -1,0 +1,5 @@
+use hotel_management_db_auth;
+show tables;
+select * from users;
+
+exit;
