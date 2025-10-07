@@ -7,12 +7,14 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
         - id: order-service
           uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/api/orders/**
-          filters:
-            - StripPrefix=1
+          # predicates:
+          #   - Path=/api/orders/**
+          # filters:
+          #   - StripPrefix=1
       discovery:
         locator:
           enabled: true

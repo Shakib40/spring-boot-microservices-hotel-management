@@ -44,53 +44,53 @@ services:
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health/readiness"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health"]
       interval: 10s
       timeout: 10s
       retries: 10
       start_period: 60s
 
-  # order-service:
-  #   build: ./order-service
-  #   container_name: order-service
-  #   ports:
-  #     - "8083:8083"
-  #   depends_on:
-  #     config-server:
-  #       condition: service_healthy
-  #     discovery-server:
-  #       condition: service_healthy
-  #   networks:
-  #     - spring-net
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8083/orders/actuator/health"]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 15s
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    networks:
+      - spring-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/orders/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
-  # api-gateway:
-  #   build: ./api-gateway
-  #   container_name: api-gateway
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     auth-service:
-  #       condition: service_healthy
-  #     order-service:
-  #       condition: service_healthy
-  #     config-server:
-  #       condition: service_healthy
-  #     discovery-server:
-  #       condition: service_healthy
-  #   networks:
-  #     - spring-net
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 15s
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    networks:
+      - spring-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 
 networks:
