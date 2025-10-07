@@ -28,3 +28,9 @@ docker logs -f discovery-server --tail 200
 
 
 docker compose up -d --build
+
+
+
+
+
+docker ps -q | % { docker stop $_ }; docker ps -aq | % { docker rm -f $_ }; docker volume ls -q | % { docker volume rm $_ }; docker network prune -f
