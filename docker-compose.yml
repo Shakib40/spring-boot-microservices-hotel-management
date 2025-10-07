@@ -45,10 +45,10 @@ services:
       - spring-net
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-      start_period: 60s
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   order-service:
     build: ./order-service
