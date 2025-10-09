@@ -56,7 +56,8 @@ services:
     environment:
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
-      - SPRING_REDIS_PASSWORD=
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health"]
       interval: 5s
