@@ -9,12 +9,12 @@ spring:
       routes:
         - id: auth-service
           uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
         - id: order-service
           uri: lb://ORDER-SERVICE
-          # predicates:
-          #   - Path=/api/orders/**
-          # filters:
-          #   - StripPrefix=1
+          predicates:
+            - Path=/orders/**
       discovery:
         locator:
           enabled: true
