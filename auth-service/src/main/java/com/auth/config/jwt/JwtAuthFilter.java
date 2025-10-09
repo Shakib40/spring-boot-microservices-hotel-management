@@ -1,4 +1,4 @@
-package com.auth.jwt;
+package com.auth.config.jwt;
 
 import com.auth.entity.User;
 import com.auth.repository.UserRepository;

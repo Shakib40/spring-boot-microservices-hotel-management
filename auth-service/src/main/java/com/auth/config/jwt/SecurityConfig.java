@@ -1,4 +1,4 @@
-package com.auth.jwt;
+package com.auth.config.jwt;
 import com.auth.exception.CustomAccessDeniedHandler;
 import com.auth.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;

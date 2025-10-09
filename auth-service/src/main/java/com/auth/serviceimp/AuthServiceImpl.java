@@ -8,11 +8,12 @@ import com.auth.entity.User;
 import com.auth.entity.Role;
 import com.auth.repository.UserRepository;
 import com.auth.repository.RoleRepository;
-import com.auth.jwt.JwtUtil;
+
 import lombok.RequiredArgsConstructor;
 
 import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
+import com.auth.config.jwt.JwtUtil;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
