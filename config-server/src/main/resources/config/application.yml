@@ -1,5 +1,5 @@
 jwt:
-  secret: shakib
+  secret: dG9wU2VjdXJlS2V5Rm9ySFRUUFN5c3RlbTEyMzQ1Ng==
   expiration: 86400000  # 24H
 
 management:
@@ -19,13 +19,21 @@ management:
     env:
       enabled: true
 
+# logging:
+#   level:
+#     root: INFO
+#     org:
+#       springframework: INFO
+#       springframework.cloud: INFO
+#     com:
+#       netflix:
+#         eureka: INFO
+#         discovery: INFO
+
+
 logging:
   level:
     root: INFO
-    org:
-      springframework: INFO
-      springframework.cloud: INFO
-    com:
-      netflix:
-        eureka: INFO
-        discovery: INFO
+    org.springframework.web: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    com.gateway: DEBUG  # your package with JwtAuthFilter
