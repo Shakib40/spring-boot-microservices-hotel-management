@@ -1,5 +1,4 @@
 1️⃣ Config Server
-
 Purpose: Holds centralized configuration for all services.
 
 Dependencies:
@@ -14,9 +13,6 @@ Purpose: Service registry for microservices.
 Dependencies:
 1. Spring Web
 2. Eureka Server
-
-
-
 
 
 3️⃣ API Gateway

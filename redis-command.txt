@@ -1,17 +1,13 @@
 docker exec -it redis-dev redis-cli
-
 exit
 
 redis-cli -h redis-dev -p 6379
-
 exit
 
 redis-cli -h redis-dev -p 6379 -a mypassword
-
 exit
 
 redis-cli -h redis-dev -p 6379 -a mypassword
-
 exit
 
 

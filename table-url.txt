@@ -2,12 +2,15 @@
 http://localhost:8761/
 
 
-2. ORDER-SERVICE
-http://localhost:8083/api/order/orders
-
-
 
 #auth-service
+ -user
+ -role
+
+http://localhost:8081/orders
+
+
+
 
 #user-service
  -user
