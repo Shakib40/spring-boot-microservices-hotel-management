@@ -34,6 +34,7 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
         String authHeader = request.getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("NOTAUTHORIZATION API_GATWAT");
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
