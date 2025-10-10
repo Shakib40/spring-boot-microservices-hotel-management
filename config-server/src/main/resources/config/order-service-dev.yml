@@ -26,9 +26,6 @@ spring:
       host: ${SPRING_DATA_REDIS_HOST:redis}
       port: ${SPRING_DATA_REDIS_PORT:6379}
 
-jwt:
-  secret: shakib
-  expiration: 86400000 # 24 hours
 
 eureka:
   client:

@@ -20,8 +20,6 @@ spring:
           enabled: true
           lower-case-service-id: true
 
-jwt:
-  secret: shakib
 
 eureka:
   client:

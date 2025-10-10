@@ -1,4 +1,7 @@
- 
+jwt:
+  secret: shakib
+  expiration: 86400000  # 24H
+
 management:
   endpoints:
     web:
