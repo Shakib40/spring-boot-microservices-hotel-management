@@ -21,7 +21,7 @@ spring:
           lower-case-service-id: true
 
 jwt:
-  secret: shakib 
+  secret: shakib
 
 eureka:
   client:
