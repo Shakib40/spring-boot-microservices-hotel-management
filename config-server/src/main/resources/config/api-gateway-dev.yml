@@ -9,15 +9,6 @@ spring:
     gateway:
       server:
         webflux:
-          routes:
-            - id: auth-service
-              uri: lb://AUTH-SERVICE
-              predicates:
-                - Path=/auth/**
-            - id: order-service
-              uri: lb://ORDER-SERVICE
-              predicates:
-                - Path=/orders/**
           discovery:
             locator:
               enabled: true
@@ -34,4 +25,3 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.hostname}:${server.port}
 
- 

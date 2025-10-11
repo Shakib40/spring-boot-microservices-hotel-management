@@ -4,11 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 public class JwtUtil {
+
     private final Key key;
 
     public JwtUtil(String secret) {
@@ -20,6 +20,7 @@ public class JwtUtil {
             parseClaims(token);
             return true;
         } catch (Exception ex) {
+            System.out.println("❌ JWT parsing failed: " + ex.getMessage());
             return false;
         }
     }

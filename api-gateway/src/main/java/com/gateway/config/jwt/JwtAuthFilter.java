@@ -15,11 +15,11 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
     private final JwtUtil jwtUtil;
     private static final String[] PUBLIC_PREFIXES = {
-            "/actuator", "/auth/", "/swagger-ui", "/v3/api-docs", "/api-gateway/running"
+            "/actuator", "/auth/", "/swagger-ui", "/v3/api-docs", "/running"
     };
 
     public JwtAuthFilter(@Value("${jwt.secret}") String secret) {
-        System.out.println("🔑 KKKKKKKKKK" + secret);
+        System.out.println("🔑 Loaded JWT Secret: " + secret);
         this.jwtUtil = new JwtUtil(secret);
     }
 
@@ -28,7 +28,6 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 
-        // Allow public endpoints
         for (String prefix : PUBLIC_PREFIXES) {
             if (path.startsWith(prefix)) {
                 return chain.filter(exchange);
@@ -43,7 +42,6 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
         }
 
         String token = authHeader.substring(7);
-
         try {
             if (!jwtUtil.validateToken(token)) {
                 System.out.println("❌ Invalid JWT Token");
@@ -61,6 +59,6 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -1; // Highest priority
+        return -1; // Highest priority (executes before route filters)
     }
 }

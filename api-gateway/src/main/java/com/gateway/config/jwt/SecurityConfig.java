@@ -12,15 +12,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        System.out.println("✅ Security Config Loaded");
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(ex -> ex
-                        .pathMatchers(
-                                "/actuator/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/auth/**"
-                        ).permitAll()
+                        .pathMatchers("/actuator/**", "/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .build();
