@@ -1,12 +1,4 @@
-docker exec -it redis redis-cli KEYS *
-
-
-
-
-
-
-
-docker exec -it redis-dev redis-cli
+ docker exec -it redis-dev redis-cli
 exit
 
 redis-cli -h redis-dev -p 6379
@@ -25,3 +17,6 @@ KEYS *                                 # list all keys
 GET myKey                              # get value of a key
 HGETALL myHash                         # check hash
 exit
+
+
+docker exec -it redis redis-cli

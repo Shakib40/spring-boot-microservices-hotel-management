@@ -1,0 +1,7 @@
+
+#Auth-Service
+
+http://localhost:8081/auth/swagger-ui/index.html
+
+
+
