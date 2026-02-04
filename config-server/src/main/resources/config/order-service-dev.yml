@@ -10,7 +10,7 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:mysql://host.docker.internal:3306/hotel_management_db_order?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://mysql:3306/hotel_management_db_order?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
     username: root
     password: Shakib@40
     driver-class-name: com.mysql.cj.jdbc.Driver

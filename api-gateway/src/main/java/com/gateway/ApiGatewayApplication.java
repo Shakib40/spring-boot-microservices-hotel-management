@@ -23,13 +23,13 @@ public class ApiGatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-            .route("auth-service", r -> r.path("/auth/**")
-                .uri("lb://AUTH-SERVICE"))
-            .route("order-service", r -> r.path("/orders/**")
-                .uri("lb://ORDER-SERVICE"))
-            .route("status-check", r -> r.path("/running")
-                .uri("https://httpbin.org/status/200"))
-            .build();
+                .route("auth-service", r -> r.path("/auth/**")
+                        .uri("lb://AUTH-SERVICE"))
+                .route("order-service", r -> r.path("/orders/**")
+                        .uri("lb://ORDER-SERVICE"))
+                .route("status-check", r -> r.path("/running")
+                        .uri("https://httpbin.org/status/200"))
+                .build();
     }
 
 }
