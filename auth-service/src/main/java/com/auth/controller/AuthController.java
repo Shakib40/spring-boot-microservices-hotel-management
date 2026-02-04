@@ -41,6 +41,6 @@ public class AuthController {
             @RequestParam String refreshToken) {
         String accessToken = bearerToken.replace("Bearer ", "");
         authService.logout(accessToken, refreshToken);
-        return ResponseEntity.ok("🚪 Logged out successfully!");
+        return ResponseEntity.ok("Logged out successfully!");
     }
 }
