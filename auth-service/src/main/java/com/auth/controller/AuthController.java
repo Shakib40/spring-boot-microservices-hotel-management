@@ -15,7 +15,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-
     // This will be for Register
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
@@ -39,7 +38,7 @@ public class AuthController {
     // ✅ Logout API
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String bearerToken,
-                                         @RequestParam String refreshToken) {
+            @RequestParam String refreshToken) {
         String accessToken = bearerToken.replace("Bearer ", "");
         authService.logout(accessToken, refreshToken);
         return ResponseEntity.ok("🚪 Logged out successfully!");

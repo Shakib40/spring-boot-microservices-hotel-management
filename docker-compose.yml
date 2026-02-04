@@ -2,6 +2,22 @@ version: "3.9"
 
 services:
 
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Shakib@40
+      MYSQL_DATABASE: hotel_management_db_auth
+    networks:
+      - spring-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7-alpine
     container_name: redis
@@ -18,7 +34,7 @@ services:
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -34,7 +50,7 @@ services:
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -51,6 +67,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      mysql:
+        condition: service_healthy
     networks:
       - spring-net
     environment:
@@ -59,7 +77,7 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health"]
+      test: [ "CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -108,14 +126,12 @@ services:
     networks:
       - spring-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 15s
 
-
 networks:
   spring-net:
     driver: bridge
-

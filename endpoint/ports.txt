@@ -4,7 +4,6 @@ Discovery Server : 8761  //done
 
  
 API Gateway : 8080    //done
-
 Auth Service : 8081   //done
 User Service : 8082   //done
 Order Service : 8083  //done

@@ -1,0 +1,19 @@
+http://localhost:8080/auth/register
+
+{
+  "username": "shakib40",
+  "firstname": "Shakib",
+  "lastname": "Hossain",
+  "email": "shakib@example.com",
+  "password": "SecurePassword123!",
+  "phoneNumber": "1234567890",
+  "role": "USER"
+}
+
+
+http://localhost:8080/auth/login
+
+{
+  "password": "SecurePassword123!",
+  "username": "shakib40"
+}

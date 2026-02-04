@@ -1,3 +1,11 @@
+docker exec -it redis redis-cli KEYS *
+
+
+
+
+
+
+
 docker exec -it redis-dev redis-cli
 exit
 
