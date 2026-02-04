@@ -57,6 +57,9 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Address> addresses;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdDate;
