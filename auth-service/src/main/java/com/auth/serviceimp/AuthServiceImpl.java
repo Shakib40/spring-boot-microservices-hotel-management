@@ -31,7 +31,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RegisterResponse register(RegisterRequest request) {
 
-
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
@@ -73,12 +72,11 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtUtil.generateAccessToken(user.getId());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId());
 
-
         // Store in Redis using TokenStoreService
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
 
-        return new LoginResponse( user.getId(), "Login successful!", accessToken, refreshToken);
+        return new LoginResponse(user.getId(), "Login successful!", accessToken, refreshToken);
     }
 
     // ✅ Refresh token logic
