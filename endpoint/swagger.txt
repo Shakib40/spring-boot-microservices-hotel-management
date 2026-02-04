@@ -1,7 +1,12 @@
 
 #Auth-Service
-
 http://localhost:8081/auth/swagger-ui/index.html
 
 
 
+#User-Service
+http://localhost:8082/user/swagger-ui/index.html
+
+
+#Order-Service
+http://localhost:8083/orders/swagger-ui/index.html
