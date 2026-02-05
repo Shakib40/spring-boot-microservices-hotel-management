@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   mysql:
@@ -56,6 +54,37 @@ services:
       timeout: 5s
       retries: 5
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - spring-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.3
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - spring-net
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:9092 --list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   auth-service:
     build: ./auth-service
     container_name: auth-service
@@ -70,6 +99,8 @@ services:
         condition: service_started
       mysql:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - spring-net
     environment:
@@ -77,12 +108,13 @@ services:
       - SPRING_REDIS_PORT=6379
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     healthcheck:
       test: [ "CMD", "curl", "-fsS", "http://localhost:8081/auth/actuator/health" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
 
   user-service:
     build: ./user-service
@@ -100,10 +132,10 @@ services:
       - spring-net
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8082/user/actuator/health" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
 
   order-service:
     build: ./order-service
@@ -128,10 +160,10 @@ services:
       - spring-net
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8083/orders/actuator/health" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
 
   api-gateway:
     build: ./api-gateway
@@ -155,10 +187,10 @@ services:
       - spring-net
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/gateway/actuator/health" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
 
   notification-service:
     build: ./notification-service
@@ -170,14 +202,18 @@ services:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - spring-net
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8087/notifications/actuator/health" ]
       interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
 
 networks:
   spring-net:

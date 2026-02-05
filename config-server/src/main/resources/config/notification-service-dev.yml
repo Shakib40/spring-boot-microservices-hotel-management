@@ -29,6 +29,11 @@ spring:
       properties:
         spring.json.trusted.packages: com.notification.dto,com.auth.dto
 
+management:
+  health:
+    mail:
+      enabled: false
+
 eureka:
   client:
     register-with-eureka: true

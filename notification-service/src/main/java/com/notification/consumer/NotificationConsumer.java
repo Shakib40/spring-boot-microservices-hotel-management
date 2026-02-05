@@ -1,4 +1,4 @@
-package main.java.com.notification.consumer;
+package com.notification.consumer;
 
 import com.notification.dto.NotificationRequest;
 import com.notification.service.NotificationService;
