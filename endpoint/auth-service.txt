@@ -4,7 +4,7 @@ http://localhost:8080/auth/register
   "username": "shakib40",
   "firstname": "Shakib",
   "lastname": "Hossain",
-  "email": "shakib@example.com",
+  "email": "shakib.jilani@sakhaglobal.com",
   "password": "SecurePassword123!",
   "phoneNumber": "1234567890",
   "role": "USER"

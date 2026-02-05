@@ -44,7 +44,8 @@ public class AuthServiceImpl implements AuthService {
         // Map incoming role name to Role entity from user-service via Feign Client
         String roleName = request.getRole();
         RoleResponse roleRes = userServiceClient.getRoleByName(roleName);
-
+        System.out.println("ROLEROLE 11" + roleRes);
+        System.out.println("ROLEROLE 22" + roleRes);
         if (roleRes == null) {
             throw new RuntimeException("Role not found in user-service: " + roleName);
         }
@@ -53,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
                 .name(roleRes.getName())
                 .description(roleRes.getDescription())
                 .build();
+        System.out.println("ROLEROLE 33" + role);
 
         User user = User.builder()
                 .username(request.getUsername())
