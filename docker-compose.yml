@@ -145,6 +145,8 @@ services:
         condition: service_healthy
       order-service:
         condition: service_healthy
+      notification-service:
+        condition: service_healthy
       config-server:
         condition: service_healthy
       discovery-server:
@@ -157,6 +159,25 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8087:8087"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    networks:
+      - spring-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8087/notifications/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
 networks:
   spring-net:
