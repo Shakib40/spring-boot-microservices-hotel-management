@@ -1,4 +1,4 @@
-package com.notification.dto;
+package com.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

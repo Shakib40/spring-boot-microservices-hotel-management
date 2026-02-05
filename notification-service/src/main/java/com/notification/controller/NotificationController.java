@@ -1,4 +1,4 @@
-package main.java.com.notification.controller;
+package com.notification.controller;
 
 import com.notification.dto.NotificationRequest;
 import com.notification.service.NotificationService;

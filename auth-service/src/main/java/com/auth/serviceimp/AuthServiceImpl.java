@@ -14,6 +14,8 @@ import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
 import com.auth.client.UserServiceClient; // user-service
 import com.auth.dto.RoleResponse;
+import com.auth.dto.NotificationRequest;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
     private final UserServiceClient userServiceClient;
+    private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -83,6 +86,14 @@ public class AuthServiceImpl implements AuthService {
         // Store in Redis using TokenStoreService
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
+
+        // Send login notification via Kafka
+        NotificationRequest notificationRequest = new NotificationRequest(
+                user.getEmail(),
+                "Login Alert",
+                "Hello " + user.getUsername() + ", you have successfully logged into your account.",
+                "EMAIL");
+        kafkaTemplate.send("login-topic", notificationRequest);
 
         return new LoginResponse(user.getId(), "Login successful!", accessToken, refreshToken);
     }

@@ -1,4 +1,4 @@
-package main.java.com.notification.serviceimp;
+package com.notification.serviceimp;
 
 import com.notification.dto.NotificationRequest;
 import com.notification.service.NotificationService;

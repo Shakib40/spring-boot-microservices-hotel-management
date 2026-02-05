@@ -1,4 +1,4 @@
-package main.java.com.notification.service;
+package com.notification.service;
 
 import com.notification.dto.NotificationRequest;
 
