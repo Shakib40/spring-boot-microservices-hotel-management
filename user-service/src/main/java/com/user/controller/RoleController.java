@@ -33,6 +33,11 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getRoleById(id));
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<RoleResponse> getRoleByName(@PathVariable String name) {
+        return ResponseEntity.ok(roleService.getRoleByName(name));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<RoleResponse> updateRole(@PathVariable String id,
             @Valid @RequestBody RoleRequest roleRequest) {

@@ -12,6 +12,8 @@ public interface RoleService {
 
     RoleResponse getRoleById(String id);
 
+    RoleResponse getRoleByName(String name);
+
     RoleResponse updateRole(String id, RoleRequest roleRequest);
 
     void deleteRole(String id);

@@ -45,6 +45,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public RoleResponse getRoleByName(String name) {
+        Role role = roleRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Role not found with name: " + name));
+        return mapToResponse(role);
+    }
+
+    @Override
     public RoleResponse updateRole(String id, RoleRequest roleRequest) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));

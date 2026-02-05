@@ -7,13 +7,13 @@ import com.auth.dto.LoginResponse;
 import com.auth.entity.User;
 import com.auth.entity.Role;
 import com.auth.repository.UserRepository;
-import com.auth.repository.RoleRepository;
-
 import lombok.RequiredArgsConstructor;
 
 import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
+import com.auth.client.UserServiceClient; // user-service
+import com.auth.dto.RoleResponse;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
+    private final UserServiceClient userServiceClient;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -38,10 +38,18 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already exists");
         }
 
-        // Map incoming role name to Role entity
+        // Map incoming role name to Role entity from user-service via Feign Client
         String roleName = request.getRole();
-        Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+        RoleResponse roleRes = userServiceClient.getRoleByName(roleName);
+
+        if (roleRes == null) {
+            throw new RuntimeException("Role not found in user-service: " + roleName);
+        }
+
+        Role role = Role.builder()
+                .name(roleRes.getName())
+                .description(roleRes.getDescription())
+                .build();
 
         User user = User.builder()
                 .username(request.getUsername())
