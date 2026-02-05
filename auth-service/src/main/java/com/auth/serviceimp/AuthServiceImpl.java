@@ -40,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
+        System.out.println("ROLEROLE 00" + request);
 
         // Map incoming role name to Role entity from user-service via Feign Client
         String roleName = request.getRole();
@@ -88,6 +89,8 @@ public class AuthServiceImpl implements AuthService {
         // Store in Redis using TokenStoreService
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
+
+        System.out.println("ROLEROLE 00" + request);
 
         // Send login notification via Kafka
         NotificationRequest notificationRequest = new NotificationRequest(

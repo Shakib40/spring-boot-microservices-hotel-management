@@ -165,6 +165,29 @@ services:
       retries: 10
       start_period: 90s
 
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8087:8087"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - spring-net
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8087/notifications/actuator/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway
@@ -187,29 +210,6 @@ services:
       - spring-net
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/gateway/actuator/health" ]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-      start_period: 90s
-
-  notification-service:
-    build: ./notification-service
-    container_name: notification-service
-    ports:
-      - "8087:8087"
-    depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-server:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    networks:
-      - spring-net
-    environment:
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8087/notifications/actuator/health" ]
       interval: 10s
       timeout: 10s
       retries: 10
