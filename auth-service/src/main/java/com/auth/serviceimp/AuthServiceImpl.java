@@ -5,7 +5,6 @@ import com.auth.dto.RegisterRequest;
 import com.auth.dto.RegisterResponse;
 import com.auth.dto.LoginResponse;
 import com.auth.entity.User;
-import com.auth.entity.Role;
 import com.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
+        System.out.println("CALLING 11" + request);
 
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -40,22 +40,14 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-        System.out.println("ROLEROLE 00" + request);
 
         // Map incoming role name to Role entity from user-service via Feign Client
-        String roleName = request.getRole();
-        RoleResponse roleRes = userServiceClient.getRoleByName(roleName);
-        System.out.println("ROLEROLE 11" + roleRes);
-        System.out.println("ROLEROLE 22" + roleRes);
+        RoleResponse roleRes = userServiceClient.getRoleByName(request.getRole());
+        System.out.println("CALLING 12" + roleRes);
+        System.out.println("CALLING 13" + roleRes);
         if (roleRes == null) {
-            throw new RuntimeException("Role not found in user-service: " + roleName);
+            throw new RuntimeException("Role not found in user-service: " + request.getRole());
         }
-
-        Role role = Role.builder()
-                .name(roleRes.getName())
-                .description(roleRes.getDescription())
-                .build();
-        System.out.println("ROLEROLE 33" + role);
 
         User user = User.builder()
                 .username(request.getUsername())
@@ -64,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
-                .role(role)
+                .role(roleRes.getName())
                 .build();
 
         userRepository.save(user);
@@ -74,6 +66,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
+        System.out.println("CALLING 21" + request);
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
@@ -90,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
 
-        System.out.println("ROLEROLE 00" + request);
+        System.out.println("CALLING 22" + request);
 
         // Send login notification via Kafka
         NotificationRequest notificationRequest = new NotificationRequest(

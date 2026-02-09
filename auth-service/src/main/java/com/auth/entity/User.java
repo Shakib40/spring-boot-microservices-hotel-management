@@ -55,7 +55,7 @@ public class User {
     @NotNull(message = "Role is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    private String role;
 
     @CreationTimestamp
     @Column(updatable = false)

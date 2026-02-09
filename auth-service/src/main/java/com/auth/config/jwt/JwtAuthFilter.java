@@ -28,8 +28,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -40,19 +40,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     // ✅ Extract userId (not username)
                     String userId = jwtUtil.extractUserId(token);
 
-                     
-                    Optional<User> userOpt = userRepository.findById(userId); 
-                     
+                    Optional<User> userOpt = userRepository.findById(userId);
 
                     if (userOpt.isPresent()) {
                         User user = userOpt.get();
 
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(
-                                        user,
-                                        null,
-                                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName())) // ✅ attach role entity name
-                                );
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                user,
+                                null,
+                                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())) // ✅ attach role entity
+                                                                                              // name
+                        );
 
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
