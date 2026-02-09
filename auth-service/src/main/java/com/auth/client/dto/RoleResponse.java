@@ -1,4 +1,4 @@
-package com.auth.dto;
+package com.auth.client.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoleResponse {
-    private Long id;
+    private String id;
     private String name;
     private String description;
 }

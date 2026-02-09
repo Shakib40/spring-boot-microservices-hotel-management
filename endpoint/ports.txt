@@ -16,3 +16,12 @@ Reservation Service : 8085
 Payment Service : 8086
 Notification Service : 8087
 Report Service : 8088
+
+
+
+Here ALl Service should be started
+1. API Gateway // /api
+2. Auth Service // /auth // without authorization // should be call only from api gateway with /api/auth
+3. User Service // /user // with authorization  // should be call only from api gateway with /api/user
+4. Order Service // /order // with authorization // should be call only from api gateway with /api/order
+5. Notification Service // /notification // with authorization // should be call only from api gateway with /api/notification

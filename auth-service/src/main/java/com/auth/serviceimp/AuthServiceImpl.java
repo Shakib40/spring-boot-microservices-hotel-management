@@ -13,7 +13,7 @@ import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
 import com.auth.client.UserServiceClient; // user-service
-import com.auth.dto.RoleResponse;
+import com.auth.client.dto.RoleResponse;
 import com.auth.dto.NotificationRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 

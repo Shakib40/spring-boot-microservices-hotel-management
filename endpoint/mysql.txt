@@ -5,6 +5,8 @@ Shakib@40
 
 
 SHOW DATABASES;
-USE hotel_management_db_auth;
+USE hotel_management_db;
 SHOW TABLES;
 SELECT * FROM users; 
+
+select * from roles \G;
