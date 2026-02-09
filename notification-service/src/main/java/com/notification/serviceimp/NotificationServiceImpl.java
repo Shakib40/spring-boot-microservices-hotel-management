@@ -17,6 +17,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void sendEmail(NotificationRequest request) {
+        System.out.println("CALLING 24" + request);
         log.info("Sending email to: {}", request.getRecipient());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(request.getRecipient());

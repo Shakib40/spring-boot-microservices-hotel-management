@@ -32,7 +32,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
-        System.out.println("CALLING 11" + request);
 
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -43,8 +42,6 @@ public class AuthServiceImpl implements AuthService {
 
         // Map incoming role name to Role entity from user-service via Feign Client
         RoleResponse roleRes = userServiceClient.getRoleByName(request.getRole());
-        System.out.println("CALLING 12" + roleRes);
-        System.out.println("CALLING 13" + roleRes);
         if (roleRes == null) {
             throw new RuntimeException("Role not found in user-service: " + request.getRole());
         }
