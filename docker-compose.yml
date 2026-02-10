@@ -90,17 +90,17 @@ services:
     container_name: auth-service
     ports:
       - "8081:8081"
-    # depends_on:
-    #   config-server:
-    #     condition: service_healthy
-    #   discovery-server:
-    #     condition: service_healthy
-    #   redis:
-    #     condition: service_started
-    #   mysql:
-    #     condition: service_healthy
-    #   kafka:
-    #     condition: service_healthy
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - spring-net
     environment:
@@ -121,13 +121,13 @@ services:
     container_name: user-service
     ports:
       - "8082:8082"
-      # depends_on:
-      # config-server:
-      #   condition: service_healthy
-      # discovery-server:
-      #   condition: service_healthy
-      # mysql:
-      #   condition: service_healthy
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     networks:
       - spring-net
     healthcheck:
@@ -142,15 +142,15 @@ services:
     container_name: order-service
     ports:
       - "8083:8083"
-      # depends_on:
-      # config-server:
-      #   condition: service_healthy
-      # discovery-server:
-      #   condition: service_healthy
-      # redis:
-      #   condition: service_started
-      # mysql:
-      #   condition: service_healthy
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      mysql:
+        condition: service_healthy
     environment:
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
@@ -170,13 +170,13 @@ services:
     container_name: notification-service
     ports:
       - "8087:8087"
-      # depends_on:
-      # config-server:
-      #   condition: service_healthy
-      # discovery-server:
-      #   condition: service_healthy
-      # kafka:
-      #   condition: service_healthy
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - spring-net
     environment:
@@ -194,12 +194,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      redis:
-        condition: service_started
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
       auth-service:
         condition: service_healthy
       user-service:
@@ -212,7 +206,6 @@ services:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
-
     networks:
       - spring-net
     healthcheck:
