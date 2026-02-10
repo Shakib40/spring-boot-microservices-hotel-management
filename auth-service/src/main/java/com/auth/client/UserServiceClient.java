@@ -9,6 +9,6 @@ import com.auth.client.dto.RoleResponse;
 @FeignClient(name = "user-service")
 public interface UserServiceClient {
 
-    @GetMapping("/user/api/roles/name/{name}")
+    @GetMapping("/user/roles/name/{name}")
     RoleResponse getRoleByName(@PathVariable("name") String name);
 }
