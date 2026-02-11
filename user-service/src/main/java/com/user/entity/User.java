@@ -53,9 +53,8 @@ public class User {
     private String phoneNumber;
 
     @NotNull(message = "Role is required")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Column(name = "role", nullable = false)
+    private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Address> addresses;

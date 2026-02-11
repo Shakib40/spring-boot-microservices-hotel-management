@@ -6,13 +6,13 @@ import com.auth.dto.RegisterResponse;
 import com.auth.dto.LoginResponse;
 import com.auth.entity.User;
 import com.auth.repository.UserRepository;
+import com.auth.client.dto.RoleResponse;
+import com.auth.client.UserServiceClient; // user-service
 import lombok.RequiredArgsConstructor;
 
 import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
-import com.auth.client.UserServiceClient; // user-service
-import com.auth.client.dto.RoleResponse;
 import com.auth.dto.NotificationRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -24,10 +24,11 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final UserServiceClient userServiceClient;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
-    private final UserServiceClient userServiceClient;
+    // private final UserServiceClient userServiceClient; // Removed usage
     private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
     @Override
@@ -40,10 +41,11 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already exists");
         }
 
-        // Map incoming role name to Role entity from user-service via Feign Client
-        RoleResponse roleRes = userServiceClient.getRoleByName(request.getRole());
-        if (roleRes == null) {
-            throw new RuntimeException("Role not found in user-service: " + request.getRole());
+        // Fetch Role from User Service via Feign Client
+        RoleResponse roleResponse = userServiceClient.getRoleByName(request.getRole());
+
+        if (roleResponse == null) {
+            throw new RuntimeException("Role not found in User Service: " + request.getRole());
         }
 
         User user = User.builder()
@@ -53,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
-                .role(roleRes.getName())
+                .role(roleResponse.getName())
                 .build();
 
         userRepository.save(user);

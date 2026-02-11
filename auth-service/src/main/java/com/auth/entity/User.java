@@ -53,8 +53,7 @@ public class User {
     private String phoneNumber;
 
     @NotNull(message = "Role is required")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
+    @Column(name = "role", nullable = false)
     private String role;
 
     @CreationTimestamp

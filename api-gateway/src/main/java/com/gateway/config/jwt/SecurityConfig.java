@@ -1,7 +1,5 @@
- 
 
-
- package com.gateway.config.jwt;
+package com.gateway.config.jwt;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +18,8 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(ex -> ex
-                        // Only allow /auth/** endpoints publicly (no token needed)
-                        .pathMatchers("/auth/**").permitAll()
-
-                        // Everything else must be authenticated (JWT required)
-                        .anyExchange().authenticated()
-                )
+                        .pathMatchers("/api/auth/**").permitAll()
+                        .anyExchange().authenticated())
                 .build();
     }
 }

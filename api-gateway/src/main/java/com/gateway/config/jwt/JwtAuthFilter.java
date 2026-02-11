@@ -15,7 +15,7 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
     private final JwtUtil jwtUtil;
     private static final String[] PUBLIC_PREFIXES = {
-            "/actuator", "/auth/", "/swagger-ui", "/v3/api-docs", "/running"
+            "/actuator", "/auth/", "/swagger-ui", "/v3/api-docs", "/running", "/api/auth/"
     };
 
     public JwtAuthFilter(@Value("${jwt.secret}") String secret) {
