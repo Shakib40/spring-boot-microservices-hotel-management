@@ -16,9 +16,7 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "login-topic", groupId = "notification-group")
     public void consumeLoginNotification(NotificationRequest request) {
-        System.out.println("CALLING 23" + request);
-
-        log.info("Received login notification for: {}", request.getRecipient());
+        System.out.println("CALLING NOTIFICATION_ERVICE" + request);
         try {
             notificationService.sendEmail(request);
         } catch (Exception e) {

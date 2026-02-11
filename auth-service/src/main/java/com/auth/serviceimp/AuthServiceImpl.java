@@ -43,7 +43,6 @@ public class AuthServiceImpl implements AuthService {
 
         // Fetch Role from User Service via Feign Client
         RoleResponse roleResponse = userServiceClient.getRoleByName(request.getRole());
-
         if (roleResponse == null) {
             throw new RuntimeException("Role not found in User Service: " + request.getRole());
         }
@@ -65,7 +64,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        System.out.println("CALLING 21" + request);
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
@@ -81,8 +79,6 @@ public class AuthServiceImpl implements AuthService {
         // Store in Redis using TokenStoreService
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
-
-        System.out.println("CALLING 22" + request);
 
         // Send login notification via Kafka
         NotificationRequest notificationRequest = new NotificationRequest(
