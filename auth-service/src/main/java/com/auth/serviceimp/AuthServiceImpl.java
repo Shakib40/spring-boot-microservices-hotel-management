@@ -86,7 +86,18 @@ public class AuthServiceImpl implements AuthService {
                 "Login Alert",
                 "Hello " + user.getUsername() + ", you have successfully logged into your account.",
                 "EMAIL");
-        kafkaTemplate.send("login-topic", notificationRequest);
+        try {
+            kafkaTemplate.send("login-topic", notificationRequest)
+                    .whenComplete((result, ex) -> {
+                        if (ex != null) {
+                            System.err.println("login-topic" + ex.getMessage());
+                        } else {
+                            System.out.println("Login notification sent successfully");
+                        }
+                    });
+        } catch (Exception e) {
+            System.err.println("Error sending Kafka message: " + e.getMessage());
+        }
 
         return new LoginResponse(user.getId(), "Login successful!", accessToken, refreshToken);
     }
