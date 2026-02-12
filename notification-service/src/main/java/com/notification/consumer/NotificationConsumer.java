@@ -16,9 +16,9 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "login-topic", groupId = "notification-group")
     public void consumeLoginNotification(NotificationRequest request) {
-        System.out.println("CALLING NOTIFICATION_ERVICE" + request);
+        log.info("Received login notification from Kafka: {}", request);
         try {
-            notificationService.sendEmail(request);
+            notificationService.sendEmailWithoutTemplate(request);
         } catch (Exception e) {
             log.error("Failed to send email notification: {}", e.getMessage());
         }

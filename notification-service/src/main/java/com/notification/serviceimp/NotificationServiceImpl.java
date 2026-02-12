@@ -45,4 +45,22 @@ public class NotificationServiceImpl implements NotificationService {
         log.info("Sending message to: {}. Content: {}", request.getRecipient(), request.getContent());
         // Implementation for messages (e.g., SMS, WhatsApp, etc.)
     }
+
+    @Override
+    public void sendEmailWithoutTemplate(NotificationRequest request) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(request.getRecipient());
+        message.setSubject(request.getSubject());
+        message.setText(request.getContent());
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendEmailWithTemplate(NotificationRequest request) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(request.getRecipient());
+        message.setSubject(request.getSubject());
+        message.setText(request.getContent());
+        mailSender.send(message);
+    }
 }

@@ -3,61 +3,46 @@ http://localhost:8761/
 
 
 
-#auth-service
+#auth-service // 8081
  -user
- -role
 
 http://localhost:8081/orders
 
 
 
 
-#user-service
+#user-service // 8082
  -user
  -address
  -role
 
 
-#order-service
+#order-service // 8083
  -order
  -order-item
 
 
-#hotel-service
+#hotel-service // 8084
  -hotel
  -room
 
 
-#reservation-service
+#reservation-service // 8085
  -reservation
 
 
-#payment-service
+#payment-service // 8086
  -payment
  -activity-log
 
 
-#notification-service
+#notification-service // 8087
  -notification
 
 
-#report-service
+#report-service // 8088
  -report
 
 
 
-
-http://localhost:8888/order-service/dev
-http://localhost:8888/order-service/prod
-
-
-http://localhost:8888/api-gateway/dev
-http://localhost:8888/api-gateway/prod
-
-
-http://localhost:8888/discovery-server/dev
-http://localhost:8888/discovery-server/prod
-
-
-http://localhost:8888/config-server/dev
-http://localhost:8888/config-server/prod
+ 

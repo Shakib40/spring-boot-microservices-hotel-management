@@ -10,4 +10,10 @@ public interface NotificationService {
     void sendOtp(NotificationRequest request);
 
     void sendMessage(NotificationRequest request);
+
+    // sendEmailWithout template
+    void sendEmailWithoutTemplate(NotificationRequest request);
+
+    // sendEmailWith template
+    void sendEmailWithTemplate(NotificationRequest request);
 }
