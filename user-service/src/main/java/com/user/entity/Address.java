@@ -38,7 +38,7 @@ public class Address {
     @NotBlank(message = "Address Type is required")
     @Column(name = "address_type")
     @Enumerated(EnumType.STRING)
-    private AddressType addressType; // ENUM: CURRENT, PERMANENT
+    private AddressType addressType;  
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

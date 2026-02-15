@@ -1,5 +1,7 @@
 package com.user.entity;
 
+import com.user.entity.Address;
+import com.user.enum.RoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -54,7 +56,7 @@ public class User {
 
     @NotNull(message = "Role is required")
     @Column(name = "role", nullable = false)
-    private String role;
+    private RoleEnum role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Address> addresses;
