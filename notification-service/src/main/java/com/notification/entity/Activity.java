@@ -26,17 +26,16 @@ public class Activity {
     private String message;
 
     @Enumerated(EnumType.STRING)
-    private ActivityType activityType; // EMAIL, SMS, PUSH
+    private ActivityType activityType;
 
     @Enumerated(EnumType.STRING)
-    private NotificationStatus status; // SENT, FAILED
+    private NotificationStatus status;
 
-    private String recipient; // email or phone
-
-    private LocalDateTime sentAt;
+    private LocalDateTime createdAt;
+    private String createdBy;
 
     @PrePersist
     public void onCreate() {
-        this.sentAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 }

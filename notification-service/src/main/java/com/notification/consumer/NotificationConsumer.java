@@ -16,7 +16,6 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "login-topic", groupId = "notification-group")
     public void consumeLoginNotification(NotificationRequest request) {
-        log.info("Received login notification from Kafka: {}", request);
         try {
             notificationService.sendEmailWithoutTemplate(request);
         } catch (Exception e) {
