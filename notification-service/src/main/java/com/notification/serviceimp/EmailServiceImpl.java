@@ -1,7 +1,7 @@
 package com.notification.serviceimp;
 
 import com.notification.dto.NotificationRequest;
-import com.notification.service.NotificationService;
+import com.notification.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationServiceImpl implements NotificationService {
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
 

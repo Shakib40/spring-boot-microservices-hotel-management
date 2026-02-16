@@ -2,7 +2,7 @@ package com.notification.service;
 
 import com.notification.dto.NotificationRequest;
 
-public interface NotificationService {
+public interface EmailService {
 
     // sendEmailWithout template
     void sendEmailWithoutTemplate(NotificationRequest request);

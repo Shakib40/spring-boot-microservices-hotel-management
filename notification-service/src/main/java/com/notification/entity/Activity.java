@@ -1,7 +1,6 @@
 package com.notification.entity;
 
 import com.notification.enums.ActivityType;
-import com.notification.enums.NotificationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,9 +26,6 @@ public class Activity {
 
     @Enumerated(EnumType.STRING)
     private ActivityType activityType;
-
-    @Enumerated(EnumType.STRING)
-    private NotificationStatus status;
 
     private LocalDateTime createdAt;
     private String createdBy;
