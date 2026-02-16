@@ -19,9 +19,10 @@ public class UserConsumer {
     private final ActivityService activityService;
 
     @KafkaListener(topics = "login-alert", groupId = "notification-group")
-    public void consumeLoginNotification(NotificationRequest request) {
+    public void consumeLoginNotification(Object user) {
+        System.out.println("User: " + user);
         try {
-            emailService.sendEmailWithTemplate(request);
+            // emailService.sendEmailWithTemplate(request);
             activityService
                     .createActivity(new ActivityRequest("Login Alert", "Login Alert", ActivityType.LOGIN, "USER-1"));
         } catch (Exception e) {

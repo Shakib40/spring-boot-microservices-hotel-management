@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
-import com.auth.dto.NotificationRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,8 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
-    // private final UserServiceClient userServiceClient; // Removed usage
-    private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
+    private final KafkaTemplate<String, User> kafkaTemplate;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -93,14 +91,9 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Stored tokens in Redis for user id: {}", user.getId());
 
         // Send login notification via Kafka
-        NotificationRequest notificationRequest = new NotificationRequest(
-                user.getEmail(),
-                "Login Alert",
-                "Hello " + user.getUsername() + ", you have successfully logged into your account.",
-                "EMAIL");
         try {
             log.info("Sending login notification to Kafka on topic 'login-alert' for user: {}", user.getEmail());
-            kafkaTemplate.send("login-alert", notificationRequest)
+            kafkaTemplate.send("login-alert", user)
                     .whenComplete((result, ex) -> {
                         if (ex != null) {
                             log.error("Failed to send login notification to login-alert: {}", ex.getMessage());
