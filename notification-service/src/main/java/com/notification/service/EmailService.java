@@ -1,12 +1,9 @@
 package com.notification.service;
 
-import com.notification.dto.NotificationRequest;
+import com.notification.consumer.dto.UserResponse;
+import com.notification.template.HtmlTemplateType;
 
 public interface EmailService {
 
-    // sendEmailWithout template
-    void sendEmailWithoutTemplate(NotificationRequest request);
-
-    // sendEmailWith template
-    void sendEmailWithTemplate(NotificationRequest request);
+    void sendEmailWithTemplate(UserResponse user, HtmlTemplateType templateType);
 }

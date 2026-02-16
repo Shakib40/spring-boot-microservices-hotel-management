@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Alert</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            padding: 40px;
+            line-height: 1.6;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .user-info {
+            background-color: #f8fafc;
+            border-left: 4px solid #764ba2;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .user-info div {
+            margin-bottom: 10px;
+        }
+
+        .user-info strong {
+            color: #764ba2;
+            width: 100px;
+            display: inline-block;
+        }
+
+        .footer {
+            background-color: #f1f5f9;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #764ba2;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Login Security Alert</h1>
+        </div>
+        <div class="content">
+            <p>Hello <span th:text="${username}" style="font-weight: bold; color: #764ba2;">User</span>,</p>
+            <p>We noticed a new login to your account. If this was you, you can safely ignore this email.</p>
+
+            <div class="user-info">
+                <div><strong>User ID:</strong> <span th:text="${userId}">-</span></div>
+                <div><strong>Email:</strong> <span th:text="${email}">-</span></div>
+                <div><strong>Time:</strong> <span
+                        th:text="${#calendars.format(#calendars.createNow(), 'dd MMM yyyy, HH:mm:ss')}">Now</span></div>
+            </div>
+
+            <p>If you don't recognize this activity, please secure your account immediately by resetting your password.
+            </p>
+
+            <a href="#" class="btn">Secure Account</a>
+        </div>
+        <div class="footer">
+            &copy; 2026 Hotel Management System. All rights reserved.<br>
+            This is an automated security notification.
+        </div>
+    </div>
+</body>
+
+</html>

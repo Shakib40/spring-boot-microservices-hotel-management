@@ -1,8 +1,8 @@
 package com.notification.consumer;
 
+import com.notification.template.HtmlTemplateType;
 import com.notification.consumer.dto.UserResponse;
 import com.notification.dto.ActivityRequest;
-import com.notification.dto.NotificationRequest;
 import com.notification.service.EmailService;
 import com.notification.service.ActivityService;
 import com.notification.enums.ActivityType;
@@ -23,12 +23,7 @@ public class UserConsumer {
     public void consumeLoginNotification(UserResponse user) {
         System.out.println("UserUser " + user);
         try {
-            emailService.sendEmailWithTemplate(
-                    new NotificationRequest(
-                            user.getEmail(),
-                            "Login Alert",
-                            "Hello " + user.getUsername() + ", a new login was detected.",
-                            "ALERT"));
+            emailService.sendEmailWithTemplate(user, HtmlTemplateType.LOGIN_ALERT);
             activityService.createActivity(
                     new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(), ActivityType.LOGIN,
                             user.getId()));
