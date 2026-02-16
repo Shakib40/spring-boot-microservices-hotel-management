@@ -49,9 +49,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendEmailWithoutTemplate(NotificationRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(request.getRecipient());
-        message.setSubject(request.getSubject());
-        message.setText(request.getContent());
+        message.setTo("shakibjilani@gmail.com");
+        message.setSubject("Login Notification");
+        message.setText("You have been logged in successfully");
         mailSender.send(message);
     }
 

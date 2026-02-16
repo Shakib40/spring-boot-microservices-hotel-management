@@ -33,11 +33,11 @@ http://localhost:8081/orders
 
 #payment-service // 8086
  -payment
- -activity-log
 
 
 #notification-service // 8087
  -notification
+ -activity-log
 
 
 #report-service // 8088
