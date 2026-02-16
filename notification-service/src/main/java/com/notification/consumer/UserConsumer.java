@@ -1,5 +1,6 @@
 package com.notification.consumer;
 
+import com.notification.consumer.dto.UserResponse;
 import com.notification.dto.ActivityRequest;
 import com.notification.dto.NotificationRequest;
 import com.notification.service.EmailService;
@@ -19,14 +20,40 @@ public class UserConsumer {
     private final ActivityService activityService;
 
     @KafkaListener(topics = "login-alert", groupId = "notification-group")
-    public void consumeLoginNotification(Object user) {
-        System.out.println("User: " + user);
+    public void consumeLoginNotification(UserResponse user) {
+        System.out.println("UserUser " + user);
         try {
-            // emailService.sendEmailWithTemplate(request);
-            activityService
-                    .createActivity(new ActivityRequest("Login Alert", "Login Alert", ActivityType.LOGIN, "USER-1"));
+            emailService.sendEmailWithTemplate(
+                    new NotificationRequest(
+                            user.getEmail(),
+                            "Login Alert",
+                            "Hello " + user.getUsername() + ", a new login was detected.",
+                            "ALERT"));
+            activityService.createActivity(
+                    new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(), ActivityType.LOGIN,
+                            user.getId()));
         } catch (Exception e) {
             log.error("Failed to send email notification: {}", e.getMessage());
         }
     }
+
+    // Reset Password
+    // @KafkaListener(topics = "reset-password", groupId = "notification-group")
+    // public void consumeResetPasswordNotification(UserResponse user) {
+    // try {
+    // emailService.sendEmailWithTemplate(
+    // new NotificationRequest(
+    // user.getEmail(),
+    // "Reset Password",
+    // "Hello " + user.getUsername() + ", your password has been reset.",
+    // "ALERT"));
+    // activityService.createActivity(
+    // new ActivityRequest("Reset Password", "Reset Password for " +
+    // user.getUsername(),
+    // ActivityType.LOGIN,
+    // user.getId()));
+    // } catch (Exception e) {
+    // log.error("Failed to send email notification: {}", e.getMessage());
+    // }
+    // }
 }

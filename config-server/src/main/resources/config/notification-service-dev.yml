@@ -7,6 +7,17 @@ spring:
   application:
     name: notification-service
 
+  datasource:
+    url: jdbc:mysql://mysql:3306/hotel_management_db_notification?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: Shakib@40
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -28,7 +39,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
-        spring.json.value.default.type: com.notification.dto.NotificationRequest
+        spring.json.value.default.type: com.notification.consumer.dto.UserResponse
         spring.json.use.type.headers: false
 
 management:
