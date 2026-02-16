@@ -9,6 +9,7 @@ import com.user.repository.UserRepository;
 import com.user.repository.AddressRepository;
 import com.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -23,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createUser(UserRequest userRequest) {
+        log.debug("Generating username for role: {}", userRequest.getRole());
         String generatedUsername = generateUsername(userRequest.getRole());
 
         User user = User.builder()
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
                 .role(userRequest.getRole())
                 .build();
 
+        log.info("Saving new user with username: {}", generatedUsername);
         User savedUser = userRepository.save(user);
         return mapToUserResponse(savedUser);
     }
@@ -42,12 +46,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("User not found with id: {}", id);
+                    return new RuntimeException("User not found with id: " + id);
+                });
         return mapToUserResponse(user);
     }
 
     @Override
     public List<UserResponse> getAllUsers() {
+        log.debug("Fetching all users from repository");
         return userRepository.findAll().stream()
                 .map(this::mapToUserResponse)
                 .collect(Collectors.toList());
@@ -56,8 +64,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateUser(String id, UserRequest userRequest) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Update failed: User not found with id: {}", id);
+                    return new RuntimeException("User not found with id: " + id);
+                });
 
+        log.info("Updating user details for id: {}", id);
         user.setUsername(userRequest.getUsername());
         user.setFirstname(userRequest.getFirstname());
         user.setLastname(userRequest.getLastname());
@@ -73,13 +85,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Delete failed: User not found with id: {}", id);
+                    return new RuntimeException("User not found with id: " + id);
+                });
 
+        log.info("Soft deleting user with id: {}", id);
         // Soft delete: mark user as inactive
         user.setIsActive(false);
         userRepository.save(user);
 
         // Soft delete: mark all associated addresses as inactive
+        log.debug("Soft deleting addresses for user id: {}", id);
         addressRepository.findByUserId(id).forEach(address -> {
             address.setIsActive(false);
             addressRepository.save(address);

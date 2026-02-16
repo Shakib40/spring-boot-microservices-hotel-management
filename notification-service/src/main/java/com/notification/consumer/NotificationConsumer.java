@@ -14,10 +14,11 @@ public class NotificationConsumer {
 
     private final NotificationService notificationService;
 
-    @KafkaListener(topics = "login-topic", groupId = "notification-group")
+    @KafkaListener(topics = "login-alert", groupId = "notification-group")
     public void consumeLoginNotification(NotificationRequest request) {
+        log.info("Consumed login-alert message from Kafka for: {}", request.getRecipient());
         try {
-            notificationService.sendEmailWithoutTemplate(request);
+            notificationService.sendEmailWithTemplate(request);
         } catch (Exception e) {
             log.error("Failed to send email notification: {}", e.getMessage());
         }

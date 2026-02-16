@@ -9,6 +9,7 @@ import com.auth.repository.UserRepository;
 import com.auth.client.dto.RoleResponse;
 import com.auth.client.UserServiceClient; // user-service
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
@@ -35,15 +37,18 @@ public class AuthServiceImpl implements AuthService {
     public RegisterResponse register(RegisterRequest request) {
 
         if (userRepository.existsByUsername(request.getUsername())) {
+            log.warn("Registration failed: Username {} already exists", request.getUsername());
             throw new RuntimeException("Username already exists");
         }
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("Registration failed: Email {} already exists", request.getEmail());
             throw new RuntimeException("Email already exists");
         }
 
         // Fetch Role from User Service via Feign Client
         RoleResponse roleResponse = userServiceClient.getRoleByName(request.getRole());
         if (roleResponse == null) {
+            log.error("Registration failed: Role {} not found in User Service", request.getRole());
             throw new RuntimeException("Role not found in User Service: " + request.getRole());
         }
 
@@ -58,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
+        log.info("Saved new user {} to repository", user.getUsername());
 
         return new RegisterResponse(true, "User registered successfully!");
     }
@@ -66,19 +72,25 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest request) {
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+                .orElseThrow(() -> {
+                    log.warn("Login failed: User {} not found", request.getUsername());
+                    return new RuntimeException("Invalid username or password");
+                });
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            log.warn("Login failed: Invalid password for user {}", request.getUsername());
             throw new RuntimeException("Invalid username or password");
         }
 
         // Generate tokens using userId
         String accessToken = jwtUtil.generateAccessToken(user.getId());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId());
+        log.debug("Generated access and refresh tokens for user id: {}", user.getId());
 
         // Store in Redis using TokenStoreService
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
+        log.debug("Stored tokens in Redis for user id: {}", user.getId());
 
         // Send login notification via Kafka
         NotificationRequest notificationRequest = new NotificationRequest(
@@ -87,18 +99,17 @@ public class AuthServiceImpl implements AuthService {
                 "Hello " + user.getUsername() + ", you have successfully logged into your account.",
                 "EMAIL");
         try {
-            System.out.println("Sending login notification to Kafka: " + notificationRequest);
-            kafkaTemplate.send("login-topic", notificationRequest)
+            log.info("Sending login notification to Kafka on topic 'login-alert' for user: {}", user.getEmail());
+            kafkaTemplate.send("login-alert", notificationRequest)
                     .whenComplete((result, ex) -> {
                         if (ex != null) {
-                            System.err.println("Failed to send to login-topic: " + ex.getMessage());
+                            log.error("Failed to send login notification to login-alert: {}", ex.getMessage());
                         } else {
-                            System.out.println(
-                                    "Login notification sent successfully to Kafka for user: " + user.getEmail());
+                            log.info("Login notification sent successfully to Kafka for user: {}", user.getEmail());
                         }
                     });
         } catch (Exception e) {
-            System.err.println("Error sending Kafka message: " + e.getMessage());
+            log.error("Error sending Kafka message: {}", e.getMessage());
         }
 
         return new LoginResponse(user.getId(), "Login successful!", accessToken, refreshToken);
@@ -107,6 +118,7 @@ public class AuthServiceImpl implements AuthService {
     // ✅ Refresh token logic
     public LoginResponse refreshToken(String refreshToken) {
         if (!jwtUtil.validateToken(refreshToken)) {
+            log.warn("Token refresh failed: Invalid refresh token");
             throw new RuntimeException("Invalid refresh token");
         }
 
@@ -114,6 +126,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Check refresh token in Redis
         if (!redisService.isRefreshTokenValid(refreshToken)) {
+            log.warn("Token refresh failed: Refresh token expired or invalid in Redis for user id: {}", userId);
             throw new RuntimeException("Refresh token expired or invalid");
         }
 
@@ -129,5 +142,6 @@ public class AuthServiceImpl implements AuthService {
         // Delete both tokens from Redis
         redisService.deleteAccessToken(accessToken);
         redisService.deleteRefreshToken(refreshToken);
+        log.info("Deleted tokens from Redis for logout");
     }
 }

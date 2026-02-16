@@ -9,8 +9,10 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtAuthFilter implements GlobalFilter, Ordered {
 
     private final JwtUtil jwtUtil;
@@ -19,7 +21,7 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     };
 
     public JwtAuthFilter(@Value("${jwt.secret}") String secret) {
-        System.out.println("🔑 Loaded JWT Secret: " + secret);
+        log.info("JwtAuthFilter initialized");
         this.jwtUtil = new JwtUtil(secret);
     }
 
@@ -27,16 +29,18 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
+        log.debug("Processing request for path: {}", path);
 
         for (String prefix : PUBLIC_PREFIXES) {
             if (path.startsWith(prefix)) {
+                log.debug("Path {} is public, bypassing authentication", path);
                 return chain.filter(exchange);
             }
         }
 
         String authHeader = request.getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("❌ Missing or invalid Authorization header");
+            log.warn("Authentication failed: Missing or invalid Authorization header for path: {}", path);
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
@@ -44,12 +48,13 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
         String token = authHeader.substring(7);
         try {
             if (!jwtUtil.validateToken(token)) {
-                System.out.println("❌ Invalid JWT Token");
+                log.warn("Authentication failed: Invalid JWT Token for path: {}", path);
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
+            log.debug("Authentication successful for path: {}", path);
         } catch (Exception ex) {
-            System.out.println("❌ JWT Exception: " + ex.getMessage());
+            log.error("Authentication failed: JWT Exception for path {}: {}", path, ex.getMessage());
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
