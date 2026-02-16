@@ -1,12 +1,14 @@
 package com.notification.entity;
 
+import com.notification.enums.ActivityType;
+import com.notification.enums.NotificationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notifications")
+@Table(name = "activities")
 @Getter
 @Setter
 @Builder

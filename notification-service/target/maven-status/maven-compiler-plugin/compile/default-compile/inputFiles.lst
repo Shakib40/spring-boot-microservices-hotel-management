@@ -2,5 +2,8 @@
 /home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/consumer/NotificationConsumer.java
 /home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/controller/NotificationController.java
 /home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/dto/NotificationRequest.java
+/home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/entity/Activity.java
+/home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/enums/ActivityType.java
+/home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/enums/NotificationStatus.java
 /home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/service/NotificationService.java
 /home/sakhaglobal/Projects/Spring-Boot/spring-boot-microservices-hotel-management/notification-service/src/main/java/com/notification/serviceimp/NotificationServiceImpl.java

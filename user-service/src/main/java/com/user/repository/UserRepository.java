@@ -15,6 +15,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
-
-    Optional<User> findTopByRoleOrderByCreatedDateDesc(com.user.enum.RoleEnum role);
 }

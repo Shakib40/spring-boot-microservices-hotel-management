@@ -32,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
                 .postalCode(addressRequest.getPostalCode())
                 .country(addressRequest.getCountry())
                 .addressType(addressRequest.getAddressType())
-                .user(user)
+                .userId(user.getId())
                 .build();
 
         Address savedAddress = addressRepository.save(address);
@@ -67,7 +67,7 @@ public class AddressServiceImpl implements AddressService {
         address.setPostalCode(addressRequest.getPostalCode());
         address.setCountry(addressRequest.getCountry());
         address.setAddressType(addressRequest.getAddressType());
-        address.setUser(user);
+        address.setUserId(user.getId());
 
         Address updatedAddress = addressRepository.save(address);
         return mapToResponse(updatedAddress);
@@ -90,7 +90,7 @@ public class AddressServiceImpl implements AddressService {
                 .postalCode(address.getPostalCode())
                 .country(address.getCountry())
                 .addressType(address.getAddressType())
-                .userId(address.getUser().getId())
+                .userId(address.getUserId())
                 .build();
     }
 }

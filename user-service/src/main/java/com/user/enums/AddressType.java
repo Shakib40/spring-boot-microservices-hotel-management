@@ -1,4 +1,4 @@
-package com.user.enum;
+package com.user.enums;
 
 public enum AddressType {
     CURRENT,

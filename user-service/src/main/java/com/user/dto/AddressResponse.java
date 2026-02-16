@@ -1,6 +1,6 @@
 package com.user.dto;
 
-import com.user.entity.AddressType;
+import com.user.enums.AddressType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +19,5 @@ public class AddressResponse {
     private String country;
     private AddressType addressType;
     private String userId;
+    private Boolean isActive;
 }

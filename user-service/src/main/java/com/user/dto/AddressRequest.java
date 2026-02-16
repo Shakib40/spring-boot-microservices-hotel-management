@@ -1,6 +1,6 @@
 package com.user.dto;
 
-import com.user.entity.AddressType;
+import com.user.enums.AddressType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

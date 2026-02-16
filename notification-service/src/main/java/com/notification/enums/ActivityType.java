@@ -1,4 +1,4 @@
-package com.notification.entity;
+package com.notification.enums;
 
 public enum ActivityType {
 

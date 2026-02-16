@@ -4,8 +4,9 @@ import com.user.dto.AddressResponse;
 import com.user.dto.UserRequest;
 import com.user.dto.UserResponse;
 import com.user.entity.User;
-import com.user.enum.RoleEnum;
+import com.user.enums.RoleEnum;
 import com.user.repository.UserRepository;
+import com.user.repository.AddressRepository;
 import com.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,21 +19,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    // here userRequest.getUsername() will auto update like USER-000001
-    // if role is  ADMIN then ADM-000001
-    // if role id USER then USR-000001
-    // if role id MANAGER then MNG-000001
-    // if role id RECEPTIONIST then REC-000001
-    // if role id WAITER then WTR-000001
-    // if role id CLEANER then CLR-000001
-    // if role id SECURITY then SCR-000001
-    
+    private final AddressRepository addressRepository;
 
     @Override
     public UserResponse createUser(UserRequest userRequest) {
         String generatedUsername = generateUsername(userRequest.getRole());
-        
+
         User user = User.builder()
                 .username(generatedUsername)
                 .firstname(userRequest.getFirstname())
@@ -80,10 +72,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found with id: " + id);
-        }
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        // Soft delete: mark user as inactive
+        user.setIsActive(false);
+        userRepository.save(user);
+
+        // Soft delete: mark all associated addresses as inactive
+        addressRepository.findByUserId(id).forEach(address -> {
+            address.setIsActive(false);
+            addressRepository.save(address);
+        });
     }
 
     private UserResponse mapToUserResponse(User user) {
@@ -95,9 +95,11 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
+                .isActive(user.getIsActive())
                 .createdDate(user.getCreatedDate())
                 .updatedDate(user.getUpdatedDate())
-                .addresses(user.getAddresses() != null ? user.getAddresses().stream()
+                .addresses(addressRepository.findByUserId(user.getId()).stream()
+                        .filter(address -> address.getIsActive()) // Only include active addresses
                         .map(address -> AddressResponse.builder()
                                 .id(address.getId())
                                 .street(address.getStreet())
@@ -106,9 +108,47 @@ public class UserServiceImpl implements UserService {
                                 .postalCode(address.getPostalCode())
                                 .country(address.getCountry())
                                 .addressType(address.getAddressType())
-                                .userId(user.getId())
+                                .userId(address.getUserId())
+                                .isActive(address.getIsActive())
                                 .build())
-                        .collect(Collectors.toList()) : null)
+                        .collect(Collectors.toList()))
                 .build();
+    }
+
+    private String generateUsername(RoleEnum role) {
+        String prefix;
+        switch (role) {
+            case ADMIN:
+                prefix = "ADM";
+                break;
+            case USER:
+                prefix = "USR";
+                break;
+            case MANAGER:
+                prefix = "MNG";
+                break;
+            case RECEPTIONIST:
+                prefix = "REC";
+                break;
+            case WAITER:
+                prefix = "WTR";
+                break;
+            case CLEANER:
+                prefix = "CLR";
+                break;
+            case SECURITY:
+                prefix = "SCR";
+                break;
+            default:
+                prefix = "USR";
+                break;
+        }
+
+        // Count existing users with the same role prefix
+        long count = userRepository.findAll().stream()
+                .filter(u -> u.getUsername().startsWith(prefix))
+                .count();
+
+        return String.format("%s-%06d", prefix, count + 1);
     }
 }

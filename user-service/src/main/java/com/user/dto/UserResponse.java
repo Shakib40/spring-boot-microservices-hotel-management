@@ -1,6 +1,6 @@
 package com.user.dto;
 
-import com.user.enum.RoleEnum;
+import com.user.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +21,7 @@ public class UserResponse {
     private String email;
     private String phoneNumber;
     private RoleEnum role;
+    private Boolean isActive;
     private List<AddressResponse> addresses;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;

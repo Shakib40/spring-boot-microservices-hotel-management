@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import com.user.enums.AddressType;
+
 @Entity
 @Table(name = "addresses")
 @Data
@@ -38,9 +40,12 @@ public class Address {
     @NotBlank(message = "Address Type is required")
     @Column(name = "address_type")
     @Enumerated(EnumType.STRING)
-    private AddressType addressType;  
+    private AddressType addressType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 }

@@ -6,9 +6,6 @@ http://localhost:8761/
 #auth-service // 8081
  -user
 
-http://localhost:8081/orders
-
-
 
 
 #user-service // 8082

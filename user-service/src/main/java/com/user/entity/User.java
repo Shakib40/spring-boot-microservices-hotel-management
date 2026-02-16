@@ -1,7 +1,6 @@
 package com.user.entity;
 
-import com.user.entity.Address;
-import com.user.enum.RoleEnum;
+import com.user.enums.RoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -58,8 +57,9 @@ public class User {
     @Column(name = "role", nullable = false)
     private RoleEnum role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Address> addresses;
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 
     @CreationTimestamp
     @Column(updatable = false)
