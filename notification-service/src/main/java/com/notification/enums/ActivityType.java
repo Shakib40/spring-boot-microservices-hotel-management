@@ -2,6 +2,14 @@ package com.notification.enums;
 
 public enum ActivityType {
 
+    // Auth
+    WELCOME,
+    LOGIN_ALERT,
+    PASSWORD_RESET,
+    REGISTRATION_SUCCESS,
+    EMAIL_VERIFICATION,
+    PHONE_VERIFICATION,
+
     // Basic Actions
     REGISTER,
     LOGIN,
@@ -18,9 +26,7 @@ public enum ActivityType {
     ADDRESS_CHANGE,
 
     // Reset / Verification Base Actions
-    PASSWORD_RESET,
-    EMAIL_VERIFICATION,
-    PHONE_VERIFICATION,
+
     ADDRESS_VERIFICATION,
 
     // Success Status

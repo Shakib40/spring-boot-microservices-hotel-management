@@ -5,6 +5,7 @@ public enum HtmlTemplateType {
     LOGIN_ALERT,
     RESET_PASSWORD,
     REGISTRATION_SUCCESS,
+    WELCOME_EMAIL,
 
     // User
     USER_UPDATED,
