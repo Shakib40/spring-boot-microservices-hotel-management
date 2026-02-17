@@ -38,6 +38,17 @@ spring:
             - Path=/api/notification/**
           filters:
             - RewritePath=/api/notification/(?<segment>.*), /notifications/$\{segment}
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
 
 eureka:
   client:

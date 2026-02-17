@@ -17,6 +17,8 @@ public class SecurityConfig {
 
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(ServerHttpSecurity.CorsSpec::disable) // Disable Spring Security CORS to let Gateway CORS
+                                                            // configuration take effect
                 .authorizeExchange(ex -> ex
                         .pathMatchers("/api/auth/**").permitAll()
                         .anyExchange().authenticated())
