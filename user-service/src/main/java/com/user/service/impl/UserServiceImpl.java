@@ -11,6 +11,8 @@ import com.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
+    private final KafkaTemplate<String, User> kafkaTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse createUser(UserRequest userRequest) {
@@ -33,13 +37,31 @@ public class UserServiceImpl implements UserService {
                 .firstname(userRequest.getFirstname())
                 .lastname(userRequest.getLastname())
                 .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
                 .phoneNumber(userRequest.getPhoneNumber())
                 .role(userRequest.getRole())
                 .build();
 
         log.info("Saving new user with username: {}", generatedUsername);
         User savedUser = userRepository.save(user);
+
+        // Send reset-password notification via Kafka
+        try {
+            log.info("Sending reset-password notification to Kafka on topic 'reset-password' for user: {}",
+                    user.getEmail());
+            kafkaTemplate.send("reset-password", savedUser)
+                    .whenComplete((result, ex) -> {
+                        if (ex != null) {
+                            log.error("Failed to send reset-password notification to reset-password: {}",
+                                    ex.getMessage());
+                        } else {
+                            log.info("Reset-password notification sent successfully to Kafka for user: {}",
+                                    user.getEmail());
+                        }
+                    });
+        } catch (Exception e) {
+            log.error("Error sending Kafka message: {}", e.getMessage());
+        }
+
         return mapToUserResponse(savedUser);
     }
 
@@ -62,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(String id, UserRequest userRequest) {
+    public UserResponse updateUserPassword(String id, String newPassword) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Update failed: User not found with id: {}", id);
@@ -70,11 +92,24 @@ public class UserServiceImpl implements UserService {
                 });
 
         log.info("Updating user details for id: {}", id);
-        user.setUsername(userRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        User updatedUser = userRepository.save(user);
+        return mapToUserResponse(updatedUser);
+    }
+
+    @Override
+    public UserResponse updateUserDetails(String id, UserRequest userRequest) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Update failed: User not found with id: {}", id);
+                    return new RuntimeException("User not found with id: " + id);
+                });
+
+        log.info("Updating user details for id: {}", id);
         user.setFirstname(userRequest.getFirstname());
         user.setLastname(userRequest.getLastname());
         user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
         user.setPhoneNumber(userRequest.getPhoneNumber());
         user.setRole(userRequest.getRole());
 
