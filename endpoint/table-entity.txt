@@ -5,6 +5,8 @@ http://localhost:8761/
 
 #auth-service // 8081
  -user
+ -blocked_users
+ -otp
 
 
 

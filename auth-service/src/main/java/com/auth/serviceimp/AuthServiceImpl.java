@@ -84,9 +84,18 @@ public class AuthServiceImpl implements AuthService {
                 });
 
         String storedOtp = redisService.getOtp(username);
-        if (storedOtp == null || !storedOtp.equals(otp)) {
-            log.warn("Verify OTP failed: Invalid or expired OTP for user {}", username);
-            throw new RuntimeException("Invalid or expired OTP");
+
+        if (storedOtp == null) {
+            log.warn("Verify OTP failed: OTP expired for user {}", username);
+            throw new RuntimeException("OTP expired");
+        }
+
+        if (!storedOtp.equals(otp)) {
+            log.warn("Verify OTP failed: Invalid OTP for user {}", username);
+            throw new RuntimeException("Invalid OTP");
+            // Take attempt count from redis
+            // if attempt count is 3 then block the user
+            // store blocked user in blocked_users table
         }
 
         redisService.deleteOtp(username);

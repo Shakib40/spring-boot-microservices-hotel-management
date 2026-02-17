@@ -44,14 +44,14 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
-    private String password;
-
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Builder.Default
+    @Column(name = "is_verified", nullable = false)
+    private Boolean isVerified = false;
 
     @NotNull(message = "Role is required")
     @Column(name = "role", nullable = false)

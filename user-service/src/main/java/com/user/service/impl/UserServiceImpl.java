@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
                 });
 
         log.info("Updating user details for id: {}", id);
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setIsVerified(true);
 
         User updatedUser = userRepository.save(user);
         return mapToUserResponse(updatedUser);
