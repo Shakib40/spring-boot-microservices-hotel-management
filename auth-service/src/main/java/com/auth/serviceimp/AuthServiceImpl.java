@@ -1,13 +1,8 @@
 package com.auth.serviceimp;
 
-import com.auth.dto.LoginRequest;
-import com.auth.dto.RegisterRequest;
-import com.auth.dto.RegisterResponse;
 import com.auth.dto.LoginResponse;
-import com.auth.entity.User;
+import com.auth.entity.UserResponse;
 import com.auth.repository.UserRepository;
-import com.auth.client.dto.RoleResponse;
-import com.auth.client.UserServiceClient; // user-service
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +11,6 @@ import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,78 +19,86 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final UserServiceClient userServiceClient;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
-    private final KafkaTemplate<String, User> kafkaTemplate;
+    private final KafkaTemplate<String, UserResponse> kafkaTemplate;
 
     @Override
-    public RegisterResponse register(RegisterRequest request) {
-
-        if (userRepository.existsByUsername(request.getUsername())) {
-            log.warn("Registration failed: Username {} already exists", request.getUsername());
-            throw new RuntimeException("Username already exists");
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            log.warn("Registration failed: Email {} already exists", request.getEmail());
-            throw new RuntimeException("Email already exists");
+    public LoginResponse refreshToken(String refreshToken) {
+        if (!jwtUtil.validateToken(refreshToken)) {
+            log.warn("Token refresh failed: Invalid refresh token");
+            throw new RuntimeException("Invalid refresh token");
         }
 
-        // Fetch Role from User Service via Feign Client
-        RoleResponse roleResponse = userServiceClient.getRoleByName(request.getRole());
-        if (roleResponse == null) {
-            log.error("Registration failed: Role {} not found in User Service", request.getRole());
-            throw new RuntimeException("Role not found in User Service: " + request.getRole());
+        String userId = jwtUtil.extractUserId(refreshToken);
+
+        if (!redisService.isRefreshTokenValid(refreshToken)) {
+            log.warn("Token refresh failed: Refresh token expired or invalid in Redis for user id: {}", userId);
+            throw new RuntimeException("Refresh token expired or invalid");
         }
 
-        // Register only when user role is not "ADMIN"
-        if (!roleResponse.getName().equals("ADMIN")) {
-            log.error("Registration failed: Role {} is not allowed to register", request.getRole());
-            throw new RuntimeException("Role not allowed to register: " + request.getRole());
-        }
+        String newAccessToken = jwtUtil.generateAccessToken(userId);
+        redisService.storeAccessToken(newAccessToken, userId);
 
-        User user = User.builder()
-                .username(request.getUsername())
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .phoneNumber(request.getPhoneNumber())
-                .role(roleResponse.getName())
-                .build();
+        UserResponse user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("Refresh failed: User {} not found", userId);
+                    return new RuntimeException("Invalid refresh token");
+                });
 
-        userRepository.save(user);
-        log.info("Saved new user {} to repository", user.getUsername());
-
-        return new RegisterResponse(true, "User registered successfully!");
+        return new LoginResponse(user, "Token refreshed!", newAccessToken, refreshToken);
     }
 
     @Override
-    public LoginResponse login(LoginRequest request) {
+    public void logout(String accessToken, String refreshToken) {
+        redisService.deleteAccessToken(accessToken);
+        redisService.deleteRefreshToken(refreshToken);
+        log.info("Deleted tokens from Redis for logout");
+    }
 
-        User user = userRepository.findByUsername(request.getUsername())
+    @Override
+    public boolean generateOtp(String username) {
+        userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    log.warn("Login failed: User {} not found", request.getUsername());
-                    return new RuntimeException("Invalid username or password");
+                    log.warn("Generate OTP failed: User {} not found", username);
+                    return new RuntimeException("User not found");
                 });
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            log.warn("Login failed: Invalid password for user {}", request.getUsername());
-            throw new RuntimeException("Invalid username or password");
+        String otp = generateRandomOtp();
+        redisService.storeOtp(username, otp);
+        System.out.println("OTPOTP: " + otp);
+        log.info("Generated OTP: {} for user: {}", otp, username); // In production, send via Email/SMS
+        return true;
+    }
+
+    private String generateRandomOtp() {
+        return String.valueOf((int) (Math.random() * 900000) + 100000); // 6-digit OTP
+    }
+
+    @Override
+    public LoginResponse verifyOtp(String username, String otp) {
+        UserResponse user = userRepository.findByUsername(username)
+                .orElseThrow(() -> {
+                    log.warn("Verify OTP failed: User {} not found", username);
+                    return new RuntimeException("User not found");
+                });
+
+        String storedOtp = redisService.getOtp(username);
+        if (storedOtp == null || !storedOtp.equals(otp)) {
+            log.warn("Verify OTP failed: Invalid or expired OTP for user {}", username);
+            throw new RuntimeException("Invalid or expired OTP");
         }
 
-        // Generate tokens using userId
+        redisService.deleteOtp(username);
+
         String accessToken = jwtUtil.generateAccessToken(user.getId());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId());
         log.debug("Generated access and refresh tokens for user id: {}", user.getId());
 
-        // Store in Redis using TokenStoreService
         redisService.storeAccessToken(accessToken, user.getId());
         redisService.storeRefreshToken(refreshToken, user.getId());
         log.debug("Stored tokens in Redis for user id: {}", user.getId());
 
-        // Send login notification via Kafka
         try {
             log.info("Sending login notification to Kafka on topic 'login-alert' for user: {}", user.getEmail());
             kafkaTemplate.send("login-alert", user)
@@ -112,41 +114,5 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return new LoginResponse(user, "Login successful!", accessToken, refreshToken);
-    }
-
-    // ✅ Refresh token logic
-    public LoginResponse refreshToken(String refreshToken) {
-        if (!jwtUtil.validateToken(refreshToken)) {
-            log.warn("Token refresh failed: Invalid refresh token");
-            throw new RuntimeException("Invalid refresh token");
-        }
-
-        String userId = jwtUtil.extractUserId(refreshToken);
-
-        // Check refresh token in Redis
-        if (!redisService.isRefreshTokenValid(refreshToken)) {
-            log.warn("Token refresh failed: Refresh token expired or invalid in Redis for user id: {}", userId);
-            throw new RuntimeException("Refresh token expired or invalid");
-        }
-
-        // Generate new access token
-        String newAccessToken = jwtUtil.generateAccessToken(userId);
-        redisService.storeAccessToken(newAccessToken, userId);
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.warn("Refresh failed: User {} not found", userId);
-                    return new RuntimeException("Invalid refresh token");
-                });
-
-        return new LoginResponse(user, "Token refreshed!", newAccessToken, refreshToken);
-    }
-
-    @Override
-    public void logout(String accessToken, String refreshToken) {
-        // Delete both tokens from Redis
-        redisService.deleteAccessToken(accessToken);
-        redisService.deleteRefreshToken(refreshToken);
-        log.info("Deleted tokens from Redis for logout");
     }
 }

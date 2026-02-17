@@ -1,6 +1,6 @@
 package com.auth.config.jwt;
 
-import com.auth.entity.User;
+import com.auth.entity.UserResponse;
 import com.auth.repository.UserRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -40,10 +40,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     // ✅ Extract userId (not username)
                     String userId = jwtUtil.extractUserId(token);
 
-                    Optional<User> userOpt = userRepository.findById(userId);
+                    Optional<UserResponse> userOpt = userRepository.findById(userId);
 
                     if (userOpt.isPresent()) {
-                        User user = userOpt.get();
+                        UserResponse user = userOpt.get();
 
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                 user,

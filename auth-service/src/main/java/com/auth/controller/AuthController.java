@@ -1,8 +1,5 @@
 package com.auth.controller;
 
-import com.auth.dto.LoginRequest;
-import com.auth.dto.RegisterRequest;
-import com.auth.dto.RegisterResponse;
 import com.auth.dto.LoginResponse;
 import com.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -16,24 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
     private final AuthService authService;
-
-    // This will be for Register
-    @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
-        log.info("Received registration request for user: {}", request.getUsername());
-        RegisterResponse response = authService.register(request);
-        log.info("User {} registered successfully", request.getUsername());
-        return ResponseEntity.ok(response);
-    }
-
-    // This will be for Login
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        log.info("Received login request for user: {}", request.getUsername());
-        LoginResponse response = authService.login(request);
-        log.info("User {} logged in successfully", request.getUsername());
-        return ResponseEntity.ok(response);
-    }
 
     // This will be for If token is expired
     @PostMapping("/refresh")
@@ -53,5 +32,24 @@ public class AuthController {
         authService.logout(accessToken, refreshToken);
         log.info("User logged out successfully");
         return ResponseEntity.ok("Logged out successfully!");
+    }
+
+    // Generate OTP
+    @PostMapping("/generate-otp")
+    public ResponseEntity<String> generateOtp(@RequestParam("username") String username) {
+        log.info("Received generate OTP request for user: {}", username);
+        authService.generateOtp(username);
+        log.info("User {} generated OTP successfully", username);
+        return ResponseEntity.ok("OTP generated successfully!");
+    }
+
+    // Verify OTP
+    @PostMapping("/verify-otp")
+    public ResponseEntity<LoginResponse> verifyOtp(@RequestParam("username") String username,
+            @RequestParam("otp") String otp) {
+        log.info("Received verify OTP request for user: {}", username);
+        LoginResponse response = authService.verifyOtp(username, otp);
+        log.info("User {} verified OTP successfully", username);
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,20 +1,12 @@
 package com.auth.repository;
 
-import com.auth.entity.User;
+import com.auth.entity.UserResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByUsername(String username);
-
-    Optional<User> findByEmail(String email);
-
-    boolean existsByUsername(String username);
-
-    boolean existsByEmail(String email);
-
-    Optional<User> findById(String id);
+public interface UserRepository extends JpaRepository<UserResponse, String> {
+    Optional<UserResponse> findByUsername(String username);
 }

@@ -39,4 +39,19 @@ public class TokenStoreService {
     public void deleteRefreshToken(String token) {
         redisTemplate.delete("refresh:" + token);
     }
+
+    // ✅ Store OTP with short expiry (e.g., 5 minutes)
+    public void storeOtp(String username, String otp) {
+        redisTemplate.opsForValue().set("otp:" + username, otp, 5, TimeUnit.MINUTES);
+    }
+
+    // ✅ Retrieve OTP
+    public String getOtp(String username) {
+        return (String) redisTemplate.opsForValue().get("otp:" + username);
+    }
+
+    // ✅ Delete OTP
+    public void deleteOtp(String username) {
+        redisTemplate.delete("otp:" + username);
+    }
 }
