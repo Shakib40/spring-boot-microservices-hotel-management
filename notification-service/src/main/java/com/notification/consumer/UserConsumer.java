@@ -8,6 +8,7 @@ import com.notification.service.ActivityService;
 import com.notification.enums.ActivityType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class UserConsumer {
 
     @KafkaListener(topics = "reset-password", groupId = "notification-group")
     public void consumeResetPasswordNotification(UserResponse user) {
+        System.out.println("Reset Password Notification: " + user);
         try {
             emailService.sendEmailWithTemplate(user, HtmlTemplateType.RESET_PASSWORD);
             activityService.createActivity(

@@ -1,5 +1,7 @@
 package com.notification.dto;
 
+import java.time.LocalDateTime;
+
 import com.notification.enums.ActivityType;
 import lombok.*;
 
