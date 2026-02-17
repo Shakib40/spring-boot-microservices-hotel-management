@@ -50,6 +50,12 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Role not found in User Service: " + request.getRole());
         }
 
+        // Register only when user role is not "ADMIN"
+        if (!roleResponse.getName().equals("ADMIN")) {
+            log.error("Registration failed: Role {} is not allowed to register", request.getRole());
+            throw new RuntimeException("Role not allowed to register: " + request.getRole());
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .firstname(request.getFirstname())
@@ -105,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
             log.error("Error sending Kafka message: {}", e.getMessage());
         }
 
-        return new LoginResponse(user.getId(), "Login successful!", accessToken, refreshToken);
+        return new LoginResponse(user, "Login successful!", accessToken, refreshToken);
     }
 
     // ✅ Refresh token logic
@@ -127,7 +133,13 @@ public class AuthServiceImpl implements AuthService {
         String newAccessToken = jwtUtil.generateAccessToken(userId);
         redisService.storeAccessToken(newAccessToken, userId);
 
-        return new LoginResponse(userId, "Token refreshed!", newAccessToken, refreshToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("Refresh failed: User {} not found", userId);
+                    return new RuntimeException("Invalid refresh token");
+                });
+
+        return new LoginResponse(user, "Token refreshed!", newAccessToken, refreshToken);
     }
 
     @Override

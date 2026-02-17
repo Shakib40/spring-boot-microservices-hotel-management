@@ -40,14 +40,14 @@ public class AuthController {
     public ResponseEntity<LoginResponse> refresh(@RequestParam("refreshToken") String refreshToken) {
         log.info("Received token refresh request");
         LoginResponse response = authService.refreshToken(refreshToken);
-        log.info("Token refreshed successfully for user id: {}", response.getUserId());
+        log.info("Token refreshed successfully for user id: {}", response.getUser().getId());
         return ResponseEntity.ok(response);
     }
 
     // ✅ Logout API
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String bearerToken,
-            @RequestParam String refreshToken) {
+            @RequestParam("refreshToken") String refreshToken) {
         log.info("Received logout request");
         String accessToken = bearerToken.replace("Bearer ", "");
         authService.logout(accessToken, refreshToken);
