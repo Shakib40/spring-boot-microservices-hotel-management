@@ -26,7 +26,6 @@ public class AuthServiceImpl implements AuthService {
     private final TokenStoreService redisService;
     private final OTPRepository otpRepository;
     private final KafkaTemplate<String, UserResponse> kafkaTemplate;
-    private final KafkaTemplate<String, String> otpKafkaTemplate;
 
     @Override
     public LoginResponse refreshToken(String refreshToken) {
@@ -71,7 +70,6 @@ public class AuthServiceImpl implements AuthService {
 
         String otp = generateRandomOtp();
         redisService.storeOtp(username, otp);
-        System.out.println("OTPOTP: " + otp);
 
         OTP otpEntity = new OTP();
         otpEntity.setUserName(username);
@@ -83,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             log.info("Sending generated otp notification to Kafka on topic 'generated-otp' for user: {}",
                     user.getEmail());
-            otpKafkaTemplate.send("generated-otp", otp, user)
+            kafkaTemplate.send("generated-otp", otp, user)
                     .whenComplete((result, ex) -> {
                         if (ex != null) {
                             log.error("Failed to send generated otp notification to generated-otp: {}",

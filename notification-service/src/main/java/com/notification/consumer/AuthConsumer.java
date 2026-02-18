@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,10 +24,9 @@ public class AuthConsumer {
     private final ActivityService activityService;
 
     @KafkaListener(topics = "generated-otp", groupId = "notification-group")
-    public void consumeGeneratedOtpNotification(String otp, UserResponse user) {
+    public void consumeGeneratedOtpNotification(@Payload UserResponse user,
+            @Header(KafkaHeaders.RECEIVED_KEY) String otp) {
         try {
-            System.out.println("OTP: " + otp);
-            System.out.println("User: " + user);
             emailService.sendOTP(user, otp);
             activityService.createActivity(
                     new ActivityRequest("Generated OTP", "Generated OTP for " + user.getUsername(),
@@ -38,7 +40,7 @@ public class AuthConsumer {
     @KafkaListener(topics = "login-alert", groupId = "notification-group")
     public void consumeLoginNotification(UserResponse user) {
         try {
-            emailService.sendEmailWithTemplate(user, HtmlTemplateType.LOGIN_ALERT);
+            emailService.sendLoginAlert(user);
             activityService.createActivity(
                     new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(),
                             ActivityType.LOGIN_ALERT,
