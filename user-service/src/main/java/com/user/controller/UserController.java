@@ -36,12 +36,10 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
-        log.info("Received request to fetch all users");
         List<UserResponse> users = userService.getAllUsers();
-        log.info("Successfully fetched {} users", users.size());
         ApiResponse<List<UserResponse>> apiResponse = ApiResponse.<List<UserResponse>>builder()
-                .status("SUCCESS")
-                .message("Users fetched successfully")
+                // .status("SUCCESS")
+                // .message("Users fetched successfully")
                 .response(users)
                 .build();
         return ResponseEntity.ok(apiResponse);
@@ -49,9 +47,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable String id) {
-        log.info("Received request to fetch user with id: {}", id);
         UserResponse response = userService.getUserById(id);
-        log.info("Successfully fetched user with id: {}", id);
         ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
                 .status("SUCCESS")
                 .message("User fetched successfully")
@@ -63,9 +59,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(@PathVariable String id,
             @Valid @RequestBody UserRequest userRequest) {
-        log.info("Received request to update user with id: {}", id);
         UserResponse response = userService.updateUserDetails(id, userRequest);
-        log.info("Successfully updated user with id: {}", id);
         ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
                 .status("SUCCESS")
                 .message("User details updated successfully")
@@ -77,9 +71,7 @@ public class UserController {
     @PutMapping("/reset-password/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUserPassword(@PathVariable String id,
             @Valid @RequestBody String newPassword) {
-        log.info("Received request to update user password with id: {}", id);
         UserResponse response = userService.updateUserPassword(id, newPassword);
-        log.info("Successfully updated user password with id: {}", id);
         ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
                 .status("SUCCESS")
                 .message("successfully reset password")
@@ -90,9 +82,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable String id) {
-        log.info("Received request to delete user with id: {}", id);
         userService.deleteUser(id);
-        log.info("Successfully deleted user with id: {}", id);
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
                 .status("SUCCESS")
                 .message("User deleted successfully")

@@ -54,6 +54,7 @@ public class User {
     private Boolean isVerified = false;
 
     @NotNull(message = "Role is required")
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private RoleEnum role;
 
