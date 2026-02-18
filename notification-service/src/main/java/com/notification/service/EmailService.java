@@ -6,4 +6,6 @@ import com.notification.template.HtmlTemplateType;
 public interface EmailService {
 
     void sendEmailWithTemplate(UserResponse user, HtmlTemplateType templateType);
+
+    void sendOTP(UserResponse user, String otp);
 }

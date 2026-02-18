@@ -12,8 +12,6 @@ import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
 
-import java.time.LocalDateTime;
-
 import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.stereotype.Service;
@@ -28,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenStoreService redisService;
     private final OTPRepository otpRepository;
     private final KafkaTemplate<String, UserResponse> kafkaTemplate;
+    private final KafkaTemplate<String, String> otpKafkaTemplate;
 
     @Override
     public LoginResponse refreshToken(String refreshToken) {
@@ -64,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean generateOtp(String username) {
-        userRepository.findByUsername(username)
+        UserResponse user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
                     log.warn("Generate OTP failed: User {} not found", username);
                     return new RuntimeException("User not found");
@@ -74,12 +73,29 @@ public class AuthServiceImpl implements AuthService {
         redisService.storeOtp(username, otp);
         System.out.println("OTPOTP: " + otp);
 
-        OTP otp = new OTP();
-        otp.setUserName(username);
-        otp.setOtp(otp);
-        otpRepository.save(otp);
+        OTP otpEntity = new OTP();
+        otpEntity.setUserName(username);
+        otpEntity.setOtp(otp);
+        otpRepository.save(otpEntity);
 
         log.info("Generated OTP: {} for user: {}", otp, username); // In production, send via Email/SMS
+
+        try {
+            log.info("Sending generated otp notification to Kafka on topic 'generated-otp' for user: {}",
+                    user.getEmail());
+            otpKafkaTemplate.send("generated-otp", otp, user)
+                    .whenComplete((result, ex) -> {
+                        if (ex != null) {
+                            log.error("Failed to send generated otp notification to generated-otp: {}",
+                                    ex.getMessage());
+                        } else {
+                            log.info("Generated otp notification sent successfully to Kafka for user: {}",
+                                    user.getEmail());
+                        }
+                    });
+        } catch (Exception e) {
+            log.error("Error sending Kafka message: {}", e.getMessage());
+        }
         return true;
     }
 

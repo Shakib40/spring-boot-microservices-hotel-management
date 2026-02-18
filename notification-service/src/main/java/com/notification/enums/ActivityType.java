@@ -3,16 +3,16 @@ package com.notification.enums;
 public enum ActivityType {
 
     // Auth
-    WELCOME,
-    LOGIN_ALERT,
-    PASSWORD_RESET,
+    GENERATED_OTP, // using
+    LOGIN_ALERT, // using
+    RESET_PASSWORD, // using
+    WELCOME_EMAIL, // using
     REGISTRATION_SUCCESS,
     EMAIL_VERIFICATION,
     PHONE_VERIFICATION,
 
     // Basic Actions
     REGISTER,
-    LOGIN,
     LOGOUT,
     ORDER,
     PAYMENT,

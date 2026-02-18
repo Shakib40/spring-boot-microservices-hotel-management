@@ -24,6 +24,36 @@ public class EmailServiceImpl implements EmailService {
     private final TemplateEngine templateEngine;
 
     @Override
+    public void sendOTP(UserResponse user, String otp) {
+        log.info("Preparing to send HTML email to: {}", user.getEmail());
+
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    mimeMessage,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+
+            Context context = new Context();
+            context.setVariable("username", user.getUsername());
+            context.setVariable("userId", user.getId());
+            context.setVariable("email", user.getEmail());
+
+            String htmlContent = templateEngine.process("generated-otp", context);
+
+            helper.setTo(user.getEmail());
+            helper.setSubject("Generated OTP");
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+            log.info("HTML email sent successfully to: {}", user.getEmail());
+
+        } catch (MessagingException e) {
+            log.error("Failed to send HTML email to {}: {}", user.getEmail(), e.getMessage());
+        }
+    }
+
+    @Override
     public void sendEmailWithTemplate(UserResponse user, HtmlTemplateType templateType) {
         log.info("Preparing to send HTML email to: {}", user.getEmail());
 
@@ -58,6 +88,7 @@ public class EmailServiceImpl implements EmailService {
         return switch (type) {
             case LOGIN_ALERT -> "login-alert";
             case RESET_PASSWORD -> "reset-password";
+            case WELCOME_EMAIL -> "welcome";
             default -> "welcome";
         };
     }

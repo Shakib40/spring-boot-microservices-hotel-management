@@ -2,10 +2,11 @@ package com.notification.template;
 
 public enum HtmlTemplateType {
     // Auth
-    LOGIN_ALERT,
-    RESET_PASSWORD,
+    GENERATED_OTP, // using
+    LOGIN_ALERT, // using
+    RESET_PASSWORD, // using
     REGISTRATION_SUCCESS,
-    WELCOME_EMAIL,
+    WELCOME_EMAIL, // using
 
     // User
     USER_UPDATED,

@@ -20,12 +20,28 @@ public class AuthConsumer {
     private final EmailService emailService;
     private final ActivityService activityService;
 
+    @KafkaListener(topics = "generated-otp", groupId = "notification-group")
+    public void consumeGeneratedOtpNotification(String otp, UserResponse user) {
+        try {
+            System.out.println("OTP: " + otp);
+            System.out.println("User: " + user);
+            emailService.sendOTP(user, otp);
+            activityService.createActivity(
+                    new ActivityRequest("Generated OTP", "Generated OTP for " + user.getUsername(),
+                            ActivityType.GENERATED_OTP,
+                            user.getId()));
+        } catch (Exception e) {
+            log.error("Failed to send email notification: {}", e.getMessage());
+        }
+    }
+
     @KafkaListener(topics = "login-alert", groupId = "notification-group")
     public void consumeLoginNotification(UserResponse user) {
         try {
             emailService.sendEmailWithTemplate(user, HtmlTemplateType.LOGIN_ALERT);
             activityService.createActivity(
-                    new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(), ActivityType.LOGIN,
+                    new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(),
+                            ActivityType.LOGIN_ALERT,
                             user.getId()));
         } catch (Exception e) {
             log.error("Failed to send email notification: {}", e.getMessage());
@@ -39,7 +55,7 @@ public class AuthConsumer {
             emailService.sendEmailWithTemplate(user, HtmlTemplateType.RESET_PASSWORD);
             activityService.createActivity(
                     new ActivityRequest("Reset Password", "Reset Password for " + user.getUsername(),
-                            ActivityType.PASSWORD_RESET,
+                            ActivityType.RESET_PASSWORD,
                             user.getId()));
         } catch (Exception e) {
             log.error("Failed to send email notification: {}", e.getMessage());
@@ -52,7 +68,7 @@ public class AuthConsumer {
             emailService.sendEmailWithTemplate(user, HtmlTemplateType.WELCOME_EMAIL);
             activityService.createActivity(
                     new ActivityRequest("Welcome", "Welcome to our platform " + user.getUsername(),
-                            ActivityType.WELCOME,
+                            ActivityType.WELCOME_EMAIL,
                             user.getId()));
         } catch (Exception e) {
             log.error("Failed to send email notification: {}", e.getMessage());
