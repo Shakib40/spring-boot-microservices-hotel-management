@@ -1,16 +1,10 @@
 package com.auth.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "blocked_users")
@@ -19,11 +13,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class blocked {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", columnDefinition = "CHAR(36)", updatable = false, nullable = false)
+    private String id;
+
     private String userName;
-    private String reason; // MULTIPLE_FAILED_OTP_ATTEMPTS, ADMIN_ACTION
+
+    @Enumerated(EnumType.STRING)
+    private BlockReason reason;
+
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp blockedAt;
+
+    @Column(name = "blocked_until", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '20 minutes'")
     private Timestamp blockedUntil;
+
+    @PrePersist
+    public void setBlockTimestamps() {
+        if (blockedAt == null) {
+            blockedAt = Timestamp.valueOf(LocalDateTime.now());
+        }
+        if (blockedUntil == null) {
+            blockedUntil = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
+        }
+    }
 }

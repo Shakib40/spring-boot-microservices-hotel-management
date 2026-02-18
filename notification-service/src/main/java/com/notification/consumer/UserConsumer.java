@@ -20,42 +20,45 @@ public class UserConsumer {
     private final EmailService emailService;
     private final ActivityService activityService;
 
-    @KafkaListener(topics = "login-alert", groupId = "notification-group")
-    public void consumeLoginNotification(UserResponse user) {
-        try {
-            emailService.sendEmailWithTemplate(user, HtmlTemplateType.LOGIN_ALERT);
-            activityService.createActivity(
-                    new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(), ActivityType.LOGIN,
-                            user.getId()));
-        } catch (Exception e) {
-            log.error("Failed to send email notification: {}", e.getMessage());
-        }
-    }
+    // @KafkaListener(topics = "login-alert", groupId = "notification-group")
+    // public void consumeLoginNotification(UserResponse user) {
+    // try {
+    // emailService.sendEmailWithTemplate(user, HtmlTemplateType.LOGIN_ALERT);
+    // activityService.createActivity(
+    // new ActivityRequest("Login Alert", "Login Alert for " + user.getUsername(),
+    // ActivityType.LOGIN,
+    // user.getId()));
+    // } catch (Exception e) {
+    // log.error("Failed to send email notification: {}", e.getMessage());
+    // }
+    // }
 
-    @KafkaListener(topics = "reset-password", groupId = "notification-group")
-    public void consumeResetPasswordNotification(UserResponse user) {
-        System.out.println("Reset Password Notification: " + user);
-        try {
-            emailService.sendEmailWithTemplate(user, HtmlTemplateType.RESET_PASSWORD);
-            activityService.createActivity(
-                    new ActivityRequest("Reset Password", "Reset Password for " + user.getUsername(),
-                            ActivityType.PASSWORD_RESET,
-                            user.getId()));
-        } catch (Exception e) {
-            log.error("Failed to send email notification: {}", e.getMessage());
-        }
-    }
+    // @KafkaListener(topics = "reset-password", groupId = "notification-group")
+    // public void consumeResetPasswordNotification(UserResponse user) {
+    // System.out.println("Reset Password Notification: " + user);
+    // try {
+    // emailService.sendEmailWithTemplate(user, HtmlTemplateType.RESET_PASSWORD);
+    // activityService.createActivity(
+    // new ActivityRequest("Reset Password", "Reset Password for " +
+    // user.getUsername(),
+    // ActivityType.PASSWORD_RESET,
+    // user.getId()));
+    // } catch (Exception e) {
+    // log.error("Failed to send email notification: {}", e.getMessage());
+    // }
+    // }
 
-    @KafkaListener(topics = "welcome", groupId = "notification-group")
-    public void consumeWelcomeNotification(UserResponse user) {
-        try {
-            emailService.sendEmailWithTemplate(user, HtmlTemplateType.WELCOME_EMAIL);
-            activityService.createActivity(
-                    new ActivityRequest("Welcome", "Welcome to our platform " + user.getUsername(),
-                            ActivityType.WELCOME,
-                            user.getId()));
-        } catch (Exception e) {
-            log.error("Failed to send email notification: {}", e.getMessage());
-        }
-    }
+    // @KafkaListener(topics = "welcome", groupId = "notification-group")
+    // public void consumeWelcomeNotification(UserResponse user) {
+    // try {
+    // emailService.sendEmailWithTemplate(user, HtmlTemplateType.WELCOME_EMAIL);
+    // activityService.createActivity(
+    // new ActivityRequest("Welcome", "Welcome to our platform " +
+    // user.getUsername(),
+    // ActivityType.WELCOME,
+    // user.getId()));
+    // } catch (Exception e) {
+    // log.error("Failed to send email notification: {}", e.getMessage());
+    // }
+    // }
 }

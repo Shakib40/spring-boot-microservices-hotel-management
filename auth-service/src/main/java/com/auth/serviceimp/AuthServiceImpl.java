@@ -1,7 +1,9 @@
 package com.auth.serviceimp;
 
 import com.auth.dto.LoginResponse;
+import com.auth.entity.OTP;
 import com.auth.entity.UserResponse;
+import com.auth.repository.OTPRepository;
 import com.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import com.auth.service.AuthService;
 import com.auth.config.Redis.TokenStoreService;
 import com.auth.config.jwt.JwtUtil;
+
+import java.time.LocalDateTime;
+
 import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final TokenStoreService redisService;
+    private final OTPRepository otpRepository;
     private final KafkaTemplate<String, UserResponse> kafkaTemplate;
 
     @Override
@@ -67,12 +73,18 @@ public class AuthServiceImpl implements AuthService {
         String otp = generateRandomOtp();
         redisService.storeOtp(username, otp);
         System.out.println("OTPOTP: " + otp);
+
+        OTP otp = new OTP();
+        otp.setUserName(username);
+        otp.setOtp(otp);
+        otpRepository.save(otp);
+
         log.info("Generated OTP: {} for user: {}", otp, username); // In production, send via Email/SMS
         return true;
     }
 
     private String generateRandomOtp() {
-        return String.valueOf((int) (Math.random() * 900000) + 100000); // 6-digit OTP
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
     }
 
     @Override
@@ -90,15 +102,26 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("OTP expired");
         }
 
+        if (redisService.isUserBlocked(username)) {
+            throw new RuntimeException("User is blocked for 20 minutes due to too many OTP attempts.");
+        }
+
         if (!storedOtp.equals(otp)) {
             log.warn("Verify OTP failed: Invalid OTP for user {}", username);
-            throw new RuntimeException("Invalid OTP");
-            // Take attempt count from redis
-            // if attempt count is 3 then block the user
-            // store blocked user in blocked_users table
+            int attemptCount = redisService.getAttemptCount(username);
+            if (attemptCount >= 2) {
+                redisService.storeBlockedUser(username);
+                log.warn("Verify OTP failed: Too many attempts for user {}", username);
+                redisService.deleteAttemptCount(username);
+                throw new RuntimeException("Too many attempts. User blocked for 20 minutes.");
+            }
+            redisService.storeAttemptCount(username, attemptCount + 1);
+            throw new RuntimeException("Invalid OTP. Attempt " + (attemptCount + 1) + " of 3.");
         }
 
         redisService.deleteOtp(username);
+        redisService.deleteAttemptCount(username);
+        redisService.deleteBlockedUser(username);
 
         String accessToken = jwtUtil.generateAccessToken(user.getId());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId());
