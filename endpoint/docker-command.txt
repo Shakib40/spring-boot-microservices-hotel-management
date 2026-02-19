@@ -32,14 +32,5 @@ docker compose up -d --build
 
 
 
-
-docker ps -q | % { docker stop $_ }; docker ps -aq | % { docker rm -f $_ }; docker volume ls -q | % { docker volume rm $_ }; docker network prune -f
-
-
-sudo lsof -i :6379
-sudo lsof -i :8888
-sudo lsof -i :8080
-sudo lsof -i :8081
-sudo lsof -i :8082
-sudo lsof -i :8083
-
+docker compose up -d user-service
+docker compose up -d --build user-service

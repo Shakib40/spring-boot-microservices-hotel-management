@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final KafkaTemplate<String, User> kafkaTemplate;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse createUser(UserRequest userRequest) {
@@ -76,11 +75,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        log.debug("Fetching all users from repository");
-        return userRepository.findAll().stream()
-                .map(this::mapToUserResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> getAllUsers(String role, Pageable pageable) {
+        RoleEnum roleEnum = null;
+        if (role != null && !role.isEmpty()) {
+            try {
+                roleEnum = RoleEnum.valueOf(role.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                log.warn("Invalid role provided: {}", role);
+                // Optionally throw an exception or handle it as null
+            }
+        }
+
+        Page<User> userPage = userRepository.findUsersWithFilter(roleEnum, pageable);
+
+        return userPage.map(this::mapToUserResponse);
     }
 
     @Override
