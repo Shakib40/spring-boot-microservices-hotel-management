@@ -37,6 +37,37 @@ public class UserController {
                 return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
         }
 
+//          GET/verify/:userName 
+//  {
+//  id: sdsds
+//  userName: 'sdsdsd'
+//  isVerified: false
+//  }
+ 
+ 
+//  // generate-otp/:userName
+//  return otp 
+ 
+ 
+//  // POST//verify-user/:userName /:otp
+//  if otp match then
+//  isVerified = true
+//  isActive = true
+
+
+
+        @PutMapping("/verify/{id}")
+        public ResponseEntity<ApiResponse<UserResponse>> verifyUser(@PathVariable String id) {
+                UserResponse response = userService.verifyUser(id);
+                ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
+                                .status("SUCCESS")
+                                .message("User verified successfully")
+                                .response(response)
+                                .build();
+                return ResponseEntity.ok(apiResponse);
+        }
+
+
         @GetMapping
         public ResponseEntity<Page<UserResponse>> getAllUsers(
                         @RequestParam(defaultValue = "0") int page,

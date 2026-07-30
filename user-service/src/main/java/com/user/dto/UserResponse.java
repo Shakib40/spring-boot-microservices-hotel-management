@@ -20,9 +20,10 @@ public class UserResponse {
     private String lastname;
     private String email;
     private String phoneNumber;
+    private String countryCode;
+    private Boolean isVerified;
     private RoleEnum role;
     private Boolean isActive;
-    private List<AddressResponse> addresses;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 }

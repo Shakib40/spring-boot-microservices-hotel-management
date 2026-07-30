@@ -46,8 +46,13 @@ public class User {
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
+
+    @NotBlank(message = "Country code is required")
+    @Pattern(regexp = "^[0-9]{2,3}$", message = "Country code must be 2 or 3 digits")
+    @Column(name = "country_code", nullable = false)
+    private String countryCode;
 
     @Builder.Default
     @Column(name = "is_verified", nullable = false)

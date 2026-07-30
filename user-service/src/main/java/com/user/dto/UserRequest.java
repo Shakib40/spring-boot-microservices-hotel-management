@@ -31,6 +31,10 @@ public class UserRequest {
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
     private String phoneNumber;
 
+    @NotBlank(message = "Country code is required")
+    @Pattern(regexp = "^[0-9]{2,3}$", message = "Country code must be 2 or 3 digits")
+    private String countryCode;
+
     @NotNull(message = "Role is required")
     private RoleEnum role;
 }
